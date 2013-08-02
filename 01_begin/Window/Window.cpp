@@ -1,11 +1,11 @@
 #include "Window.h"
 #include <iostream>
 
-
 Window::Window(HINSTANCE& hInstance, int nCommandShow)
 {
 	windowHInstance = hInstance;
 	windowNCommandShow = nCommandShow;
+	windowTitle = L"Vovo game engine v0.01";
 	std::cout << "Window CREATED\n";
 }
 
@@ -33,7 +33,7 @@ void Window::CreateGraphics3D(int width, int height)
 
     hWnd = CreateWindowEx(NULL,
                           L"WindowClass1",
-                          L"Our First Windowed Program",
+						  windowTitle,
                           WS_OVERLAPPEDWINDOW,
                           300,
                           300,
@@ -44,8 +44,12 @@ void Window::CreateGraphics3D(int width, int height)
                           windowHInstance,
                           NULL);
 
-    // display the window on the screen
     ShowWindow(hWnd, windowNCommandShow);
+}
+
+void Window::SetApplicationTitle(const LPCWSTR &title)
+{
+	windowTitle = title;
 }
 
 LRESULT CALLBACK Window::windowProcessor(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
