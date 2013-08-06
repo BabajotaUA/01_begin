@@ -14,7 +14,7 @@ Window::~Window(void)
 	std::cout << "Window DELETED\n";
 }
 
-void Window::CreateGraphics3D(int width, int height)
+void Window::CreateWindowRect(int width, int height)
 {
 	HWND hWnd;
     WNDCLASSEX wc;
