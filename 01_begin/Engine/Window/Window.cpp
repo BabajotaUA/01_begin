@@ -14,7 +14,7 @@ Window::~Window(void)
 	std::cout << "Window DELETED\n";
 }
 
-void Window::CreateWindowRect(int width, int height)
+HWND Window::CreateWindowRect(int width, int height)
 {
 	HWND hWnd;
     WNDCLASSEX wc;
@@ -45,6 +45,7 @@ void Window::CreateWindowRect(int width, int height)
                           NULL);
 
     ShowWindow(hWnd, windowNCommandShow);
+    return hWnd;
 }
 
 void Window::SetApplicationTitle(const LPCWSTR &title)

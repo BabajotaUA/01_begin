@@ -7,7 +7,7 @@ public:
 	Window(HINSTANCE&, int);
 	virtual ~Window(void);
 
-	void CreateWindowRect(int width, int height);
+    HWND CreateWindowRect(int width, int height);
 	void SetApplicationTitle(const LPCWSTR &title);
 
 private:

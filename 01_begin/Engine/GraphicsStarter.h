@@ -16,8 +16,8 @@ public:
     void CreateGraphics3D(int width, int height);
 
 private:
-    std::shared_ptr<IDXGISwapChain> graphicsSwapChain;
-    std::shared_ptr<ID3D11Device> graphicsDevice;
-    std::shared_ptr<ID3D11DeviceContext> graphicsContext;
+    IDXGISwapChain* graphicsSwapChain;
+    ID3D11Device* graphicsDevice;
+    ID3D11DeviceContext* graphicsContext;
 };
 
