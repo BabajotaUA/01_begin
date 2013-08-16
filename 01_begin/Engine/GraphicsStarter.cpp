@@ -9,6 +9,7 @@ GraphicsStarter::GraphicsStarter(HINSTANCE& hInstance, int windowNCommandShow) :
 
 GraphicsStarter::~GraphicsStarter(void)
 {
+	graphicsSwapChain->SetFullscreenState(TRUE, NULL);
 	graphicsSwapChain->Release();
 	graphicsContext->Release();
 	graphicsDevice->Release();
@@ -40,10 +41,13 @@ void GraphicsStarter::D3DInitialisation()
 
     swapChainDescription.BufferCount = 1;
     swapChainDescription.BufferDesc.Format = DXGI_FORMAT_B8G8R8A8_UNORM;
+	swapChainDescription.BufferDesc.Width = graphicsWidth;
+	swapChainDescription.BufferDesc.Height = graphicsHeight;
     swapChainDescription.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
     swapChainDescription.OutputWindow = CreateWindowRect(graphicsWidth, graphicsHeight);
     swapChainDescription.SampleDesc.Count = 4;
-    swapChainDescription.Windowed = TRUE;
+	swapChainDescription.Windowed = FALSE;
+	swapChainDescription.Flags = DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH;
 
     D3D11CreateDeviceAndSwapChain(NULL,
         D3D_DRIVER_TYPE_HARDWARE,
