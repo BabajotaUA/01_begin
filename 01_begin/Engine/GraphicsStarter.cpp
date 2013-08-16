@@ -1,7 +1,7 @@
 #include "GraphicsStarter.h"
+#include <iostream>
 
-
-GraphicsStarter::GraphicsStarter(Window &parentWindow) : Window(parentWindow)
+GraphicsStarter::GraphicsStarter(HINSTANCE& hInstance, int windowNCommandShow) : Window(hInstance, windowNCommandShow)
 {
     std::cout << "GraphicsStarter CREATED\n";
 }
@@ -9,29 +9,71 @@ GraphicsStarter::GraphicsStarter(Window &parentWindow) : Window(parentWindow)
 
 GraphicsStarter::~GraphicsStarter(void)
 {
+	graphicsSwapChain->Release();
+	graphicsContext->Release();
+	graphicsDevice->Release();
+	graphicsBackBuffer->Release();
     std::cout << "GraphicsStarter DELETED\n";
 }
 
 void GraphicsStarter::CreateGraphics3D(int width, int height)
 {
-    std::shared_ptr<DXGI_SWAP_CHAIN_DESC> swapChainDescription(new DXGI_SWAP_CHAIN_DESC());
+	graphicsWidth = width;
+	graphicsHeight = height;
 
-    ZeroMemory(swapChainDescription.get(), sizeof(DXGI_SWAP_CHAIN_DESC));
+	this->D3DInitialisation();
+	this->D3DSetRenderTarget();
+	this->D3DSetViewport();
+}
 
-    swapChainDescription->BufferCount = 1;
-    swapChainDescription->BufferDesc.Format = DXGI_FORMAT_B8G8R8A8_UNORM;
-    swapChainDescription->BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
-    swapChainDescription->OutputWindow = CreateWindowRect(width, height);
-    swapChainDescription->SampleDesc.Count = 4;
-    swapChainDescription->Windowed = TRUE;
+void GraphicsStarter::RenderWorld()
+{
+	graphicsContext->ClearRenderTargetView(graphicsBackBuffer, D3DXCOLOR(0.0f, 0.2f, 0.4f, 1.0f));
+	graphicsSwapChain->Present(0, 0);
+}
+
+void GraphicsStarter::D3DInitialisation()
+{
+	DXGI_SWAP_CHAIN_DESC swapChainDescription;
+
+    ZeroMemory(&swapChainDescription, sizeof(DXGI_SWAP_CHAIN_DESC));
+
+    swapChainDescription.BufferCount = 1;
+    swapChainDescription.BufferDesc.Format = DXGI_FORMAT_B8G8R8A8_UNORM;
+    swapChainDescription.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
+    swapChainDescription.OutputWindow = CreateWindowRect(graphicsWidth, graphicsHeight);
+    swapChainDescription.SampleDesc.Count = 4;
+    swapChainDescription.Windowed = TRUE;
 
     D3D11CreateDeviceAndSwapChain(NULL,
         D3D_DRIVER_TYPE_HARDWARE,
         NULL, NULL, NULL, NULL,
         D3D11_SDK_VERSION,
-        swapChainDescription.get(),
+        &swapChainDescription,
         &graphicsSwapChain,
         &graphicsDevice, NULL,
         &graphicsContext);
+}
 
+void GraphicsStarter::D3DSetRenderTarget()
+{
+	ID3D11Texture2D *pBackBuffer;
+    graphicsSwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID*)&pBackBuffer);
+	graphicsDevice->CreateRenderTargetView(pBackBuffer, NULL, &graphicsBackBuffer);
+    pBackBuffer->Release();
+
+    graphicsContext->OMSetRenderTargets(1, &graphicsBackBuffer, NULL);
+}
+
+void GraphicsStarter::D3DSetViewport()
+{
+	D3D11_VIEWPORT viewport;
+    ZeroMemory(&viewport, sizeof(D3D11_VIEWPORT));
+
+    viewport.TopLeftX = 0;
+    viewport.TopLeftY = 0;
+	viewport.Width = graphicsWidth;
+	viewport.Height = graphicsHeight;
+
+	graphicsContext->RSSetViewports(1, &viewport);
 }

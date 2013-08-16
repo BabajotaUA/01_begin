@@ -2,9 +2,7 @@
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPreviousInstance, LPSTR lpCommandLine, int nCommandShow)
 {
-    
-	Window appWindow = Window(hInstance, nCommandShow);
-    GraphicsStarter graphics = GraphicsStarter(appWindow);
+    GraphicsStarter graphics = GraphicsStarter(hInstance, nCommandShow);
 
 	graphics.CreateGraphics3D(800, 600);
 
@@ -19,6 +17,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPreviousInstance, LPSTR lpCom
             if(msg.message == WM_QUIT)
                 break;
         }
+		graphics.RenderWorld();
     }
-    return msg.wParam;
+	return msg.wParam;
 }
