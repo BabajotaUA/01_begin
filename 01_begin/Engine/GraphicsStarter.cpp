@@ -3,6 +3,10 @@
 
 GraphicsStarter::GraphicsStarter(HINSTANCE& hInstance, int windowNCommandShow) : Window(hInstance, windowNCommandShow)
 {
+	graphicsBackBuffer = nullptr;
+	graphicsContext = nullptr;
+	graphicsDevice = nullptr;
+	graphicsSwapChain =nullptr;
     std::cout << "GraphicsStarter CREATED\n";
 }
 
@@ -61,7 +65,7 @@ void GraphicsStarter::D3DInitialisation()
 
 void GraphicsStarter::D3DSetRenderTarget()
 {
-	ID3D11Texture2D *pBackBuffer;
+	ID3D11Texture2D *pBackBuffer = nullptr;
     graphicsSwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID*)&pBackBuffer);
 	graphicsDevice->CreateRenderTargetView(pBackBuffer, NULL, &graphicsBackBuffer);
     pBackBuffer->Release();
