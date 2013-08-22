@@ -23,20 +23,24 @@ GraphicsStarter::~GraphicsStarter(void)
 
 void GraphicsStarter::CreateGraphics3D(int screenWidth, int screenHeight)
 {
-	if (screenWidth == 0 || screenHeight == 0)
+	setScreenResolution(screenWidth, screenHeight);
+	D3DInitialisation();
+	D3DSetRenderTarget();
+	D3DSetViewport();
+}
+
+void GraphicsStarter::setScreenResolution(int width, int height)
+{
+	if (width == 0 || height == 0)
 	{
 		graphicsWidth = GetSystemMetrics(SM_CXSCREEN);
 		graphicsHeight = GetSystemMetrics(SM_CYSCREEN);
 	}
 	else
 	{
-		graphicsWidth = screenWidth;
-		graphicsHeight = screenHeight;
+		graphicsWidth = width;
+		graphicsHeight = height;
 	}
-
-	this->D3DInitialisation();
-	this->D3DSetRenderTarget();
-	this->D3DSetViewport();
 }
 
 void GraphicsStarter::D3DInitialisation()
@@ -51,7 +55,7 @@ void GraphicsStarter::D3DInitialisation()
 	swapChainDescription.BufferDesc.Width = graphicsWidth;
 	swapChainDescription.BufferDesc.Height = graphicsHeight;
     swapChainDescription.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
-	swapChainDescription.OutputWindow = window();
+	swapChainDescription.OutputWindow = windowHandle();
     swapChainDescription.SampleDesc.Count = 4;
 	swapChainDescription.Windowed = !FULL_SCREEN;
 	swapChainDescription.Flags = DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH;

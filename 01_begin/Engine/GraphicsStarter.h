@@ -29,5 +29,6 @@ private:
 	void D3DInitialisation();
 	void D3DSetRenderTarget();
 	void D3DSetViewport();
+	void setScreenResolution(int width, int height);
 };
 

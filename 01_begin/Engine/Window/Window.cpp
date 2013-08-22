@@ -16,10 +16,7 @@ void Window::createWindowRect(int screenWidth, int screenHeight)
 {
     WNDCLASSEX wc;
 	ZeroMemory(&wc, sizeof(WNDCLASSEX));
-	DEVMODE devModeScreenSettings;
 	windowHInstance = GetModuleHandle(NULL);
-	int windowPosX, windowPosY;
-
     wc.style = CS_HREDRAW | CS_VREDRAW | CS_OWNDC;
 	wc.lpfnWndProc = &Window::windowProcessor;
     wc.hInstance = windowHInstance;
@@ -30,33 +27,12 @@ void Window::createWindowRect(int screenWidth, int screenHeight)
 	wc.lpszMenuName = NULL;
     wc.lpszClassName = windowTitle;
 	wc.cbSize = sizeof(WNDCLASSEX);
-
     RegisterClassEx(&wc);
 
-	if (screenWidth == 0 || screenHeight == 0)
-	{
-		screenWidth  = GetSystemMetrics(SM_CXSCREEN);
-		screenHeight = GetSystemMetrics(SM_CYSCREEN);
-	}
+	windowWidth = screenWidth;
+	windowHeight = screenHeight;
 
-	if (FULL_SCREEN)
-	{
-		windowPosX = windowPosY = 0;
-
-		ZeroMemory(&devModeScreenSettings, sizeof(devModeScreenSettings));
-		devModeScreenSettings.dmSize = sizeof(devModeScreenSettings);
-		devModeScreenSettings.dmPelsWidth = (unsigned long)screenWidth;
-		devModeScreenSettings.dmPelsHeight = (unsigned long)screenHeight;
-		devModeScreenSettings.dmBitsPerPel = 32;
-		devModeScreenSettings.dmFields = DM_BITSPERPEL | DM_PELSWIDTH | DM_PELSHEIGHT;
-
-		ChangeDisplaySettings(&devModeScreenSettings, CDS_FULLSCREEN);
-	}
-	else
-	{
-		windowPosX = (GetSystemMetrics(SM_CXSCREEN) - screenWidth) / 2;
-		windowPosY = (GetSystemMetrics(SM_CYSCREEN) - screenHeight) / 2;
-	}
+	setScreenMode();
 
 	windowRect = CreateWindowEx(WS_EX_APPWINDOW,
                           windowTitle,
@@ -64,8 +40,8 @@ void Window::createWindowRect(int screenWidth, int screenHeight)
 						  WS_OVERLAPPEDWINDOW,
 						  windowPosX,
                           windowPosY,
-						  screenWidth,
-                          screenHeight,
+						  windowWidth,
+                          windowHeight,
                           NULL,
                           NULL,
                           windowHInstance,
@@ -83,7 +59,29 @@ void Window::setApplicationTitle(const LPCWSTR &title)
 	windowTitle = title;
 }
 
-HWND Window::window()
+void Window::setScreenMode()
+{
+	if (FULL_SCREEN)
+	{
+		DEVMODE devModeScreenSettings;
+		windowPosX = windowPosY = 0;
+		ZeroMemory(&devModeScreenSettings, sizeof(devModeScreenSettings));
+		devModeScreenSettings.dmSize = sizeof(devModeScreenSettings);
+		devModeScreenSettings.dmPelsWidth = (unsigned long)windowWidth;
+		devModeScreenSettings.dmPelsHeight = (unsigned long)windowHeight;
+		devModeScreenSettings.dmBitsPerPel = 32;
+		devModeScreenSettings.dmFields = DM_BITSPERPEL | DM_PELSWIDTH | DM_PELSHEIGHT;
+
+		ChangeDisplaySettings(&devModeScreenSettings, CDS_FULLSCREEN);
+	}
+	else
+	{
+		windowPosX = (GetSystemMetrics(SM_CXSCREEN) - windowWidth) / 2;
+		windowPosY = (GetSystemMetrics(SM_CYSCREEN) - windowHeight) / 2;
+	}
+}
+
+HWND Window::windowHandle() const
 {
 	return windowRect;
 }
