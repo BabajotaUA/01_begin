@@ -1,7 +1,7 @@
 #include "GraphicsStarter.h"
 #include <iostream>
 
-GraphicsStarter::GraphicsStarter(HINSTANCE& hInstance, int windowNCommandShow) : Window(hInstance, windowNCommandShow)
+GraphicsStarter::GraphicsStarter() : Window()
 {
 	graphicsBackBuffer = nullptr;
 	graphicsContext = nullptr;
@@ -21,26 +21,29 @@ GraphicsStarter::~GraphicsStarter(void)
     std::cout << "GraphicsStarter DELETED\n";
 }
 
-void GraphicsStarter::CreateGraphics3D(int width, int height)
+void GraphicsStarter::CreateGraphics3D(int screenWidth, int screenHeight)
 {
-	graphicsWidth = width;
-	graphicsHeight = height;
+	if (screenWidth == 0 || screenHeight == 0)
+	{
+		graphicsWidth = GetSystemMetrics(SM_CXSCREEN);
+		graphicsHeight = GetSystemMetrics(SM_CYSCREEN);
+	}
+	else
+	{
+		graphicsWidth = screenWidth;
+		graphicsHeight = screenHeight;
+	}
 
 	this->D3DInitialisation();
 	this->D3DSetRenderTarget();
 	this->D3DSetViewport();
 }
 
-void GraphicsStarter::RenderWorld()
-{
-	graphicsContext->ClearRenderTargetView(graphicsBackBuffer, D3DXCOLOR(0.0f, 0.2f, 0.4f, 1.0f));
-	graphicsSwapChain->Present(0, 0);
-}
-
 void GraphicsStarter::D3DInitialisation()
 {
-	DXGI_SWAP_CHAIN_DESC swapChainDescription;
+	createWindowRect(graphicsWidth, graphicsHeight);
 
+	DXGI_SWAP_CHAIN_DESC swapChainDescription;
     ZeroMemory(&swapChainDescription, sizeof(DXGI_SWAP_CHAIN_DESC));
 
     swapChainDescription.BufferCount = 1;
@@ -48,9 +51,9 @@ void GraphicsStarter::D3DInitialisation()
 	swapChainDescription.BufferDesc.Width = graphicsWidth;
 	swapChainDescription.BufferDesc.Height = graphicsHeight;
     swapChainDescription.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
-    swapChainDescription.OutputWindow = CreateWindowRect(graphicsWidth, graphicsHeight);
+	swapChainDescription.OutputWindow = window();
     swapChainDescription.SampleDesc.Count = 4;
-	swapChainDescription.Windowed = FALSE;
+	swapChainDescription.Windowed = !FULL_SCREEN;
 	swapChainDescription.Flags = DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH;
 
     D3D11CreateDeviceAndSwapChain(NULL,
@@ -84,4 +87,10 @@ void GraphicsStarter::D3DSetViewport()
 	viewport.Height = graphicsHeight;
 
 	graphicsContext->RSSetViewports(1, &viewport);
+}
+
+void GraphicsStarter::RenderWorld()
+{
+	graphicsContext->ClearRenderTargetView(graphicsBackBuffer, D3DXCOLOR(0.0f, 0.2f, 0.4f, 1.0f));
+	graphicsSwapChain->Present(0, 0);
 }

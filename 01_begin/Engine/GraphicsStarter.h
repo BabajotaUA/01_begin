@@ -13,10 +13,10 @@
 class GraphicsStarter : public Window
 {
 public:
-    GraphicsStarter(HINSTANCE& hInstance, int windowNCommandShow);
+    GraphicsStarter();
     virtual ~GraphicsStarter(void);
 
-    void CreateGraphics3D(int width, int height);
+    void CreateGraphics3D(int screenWidth = 0, int screenHeight = 0);
 	void RenderWorld();
 
 private:

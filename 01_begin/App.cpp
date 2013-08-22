@@ -2,7 +2,7 @@
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPreviousInstance, LPSTR lpCommandLine, int nCommandShow)
 {
-    GraphicsStarter graphics = GraphicsStarter(hInstance, nCommandShow);
+	auto graphics = GraphicsStarter();
 
 	graphics.CreateGraphics3D(800, 600);
 

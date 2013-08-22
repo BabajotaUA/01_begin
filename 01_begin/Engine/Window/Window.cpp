@@ -1,10 +1,8 @@
 #include "Window.h"
 #include <iostream>
 
-Window::Window(HINSTANCE& hInstance, int nCommandShow)
+Window::Window()
 {
-	windowHInstance = hInstance;
-	windowNCommandShow = nCommandShow;
 	windowTitle = L"Vovo game engine v0.01";
 	std::cout << "Window CREATED\n";
 }
@@ -14,43 +12,80 @@ Window::~Window(void)
 	std::cout << "Window DELETED\n";
 }
 
-HWND Window::CreateWindowRect(int width, int height)
+void Window::createWindowRect(int screenWidth, int screenHeight)
 {
-	HWND hWnd;
     WNDCLASSEX wc;
+	ZeroMemory(&wc, sizeof(WNDCLASSEX));
+	DEVMODE devModeScreenSettings;
+	windowHInstance = GetModuleHandle(NULL);
+	int windowPosX, windowPosY;
 
-    ZeroMemory(&wc, sizeof(WNDCLASSEX));
-
-    wc.cbSize = sizeof(WNDCLASSEX);
-    wc.style = CS_HREDRAW | CS_VREDRAW;
+    wc.style = CS_HREDRAW | CS_VREDRAW | CS_OWNDC;
 	wc.lpfnWndProc = &Window::windowProcessor;
     wc.hInstance = windowHInstance;
+	wc.hIcon = LoadIcon(NULL, IDI_WINLOGO);
+	wc.hIconSm = wc.hIcon;
     wc.hCursor = LoadCursor(NULL, IDC_ARROW);
-    wc.hbrBackground = (HBRUSH)COLOR_WINDOW;
-    wc.lpszClassName = L"WindowClass1";
+	wc.hbrBackground = (HBRUSH)COLOR_APPWORKSPACE;
+	wc.lpszMenuName = NULL;
+    wc.lpszClassName = windowTitle;
+	wc.cbSize = sizeof(WNDCLASSEX);
 
     RegisterClassEx(&wc);
 
-    hWnd = CreateWindowEx(NULL,
-                          L"WindowClass1",
+	if (screenWidth == 0 || screenHeight == 0)
+	{
+		screenWidth  = GetSystemMetrics(SM_CXSCREEN);
+		screenHeight = GetSystemMetrics(SM_CYSCREEN);
+	}
+
+	if (FULL_SCREEN)
+	{
+		windowPosX = windowPosY = 0;
+
+		ZeroMemory(&devModeScreenSettings, sizeof(devModeScreenSettings));
+		devModeScreenSettings.dmSize = sizeof(devModeScreenSettings);
+		devModeScreenSettings.dmPelsWidth = (unsigned long)screenWidth;
+		devModeScreenSettings.dmPelsHeight = (unsigned long)screenHeight;
+		devModeScreenSettings.dmBitsPerPel = 32;
+		devModeScreenSettings.dmFields = DM_BITSPERPEL | DM_PELSWIDTH | DM_PELSHEIGHT;
+
+		ChangeDisplaySettings(&devModeScreenSettings, CDS_FULLSCREEN);
+	}
+	else
+	{
+		windowPosX = (GetSystemMetrics(SM_CXSCREEN) - screenWidth) / 2;
+		windowPosY = (GetSystemMetrics(SM_CYSCREEN) - screenHeight) / 2;
+	}
+
+	windowRect = CreateWindowEx(WS_EX_APPWINDOW,
+                          windowTitle,
 						  windowTitle,
-                          WS_OVERLAPPEDWINDOW,
-                          300,
-                          300,
-						  width,
-                          height,
+						  WS_OVERLAPPEDWINDOW,
+						  windowPosX,
+                          windowPosY,
+						  screenWidth,
+                          screenHeight,
                           NULL,
                           NULL,
                           windowHInstance,
                           NULL);
 
-    ShowWindow(hWnd, windowNCommandShow);
-    return hWnd;
+	ShowWindow(windowRect, SW_SHOW);
+	SetForegroundWindow(windowRect);
+	SetFocus(windowRect);
+
+	ShowCursor(FALSE);
 }
 
-void Window::SetApplicationTitle(const LPCWSTR &title)
+void Window::setApplicationTitle(const LPCWSTR &title)
 {
 	windowTitle = title;
+}
+
+HWND Window::window()
+{
+	return windowRect;
 }
 
 LRESULT CALLBACK Window::windowProcessor(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
