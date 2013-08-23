@@ -18,7 +18,7 @@ void Window::createWindowRect(int screenWidth, int screenHeight)
 	ZeroMemory(&wc, sizeof(WNDCLASSEX));
 	windowHInstance = GetModuleHandle(NULL);
     wc.style = CS_HREDRAW | CS_VREDRAW | CS_OWNDC;
-	wc.lpfnWndProc = &Window::windowProcessor;
+	wc.lpfnWndProc = windowProcessor;
     wc.hInstance = windowHInstance;
 	wc.hIcon = LoadIcon(NULL, IDI_WINLOGO);
 	wc.hIconSm = wc.hIcon;
@@ -57,6 +57,7 @@ void Window::createWindowRect(int screenWidth, int screenHeight)
 void Window::SetApplicationTitle(const LPCWSTR &title)
 {
 	windowTitle = title;
+	SetWindowText(windowRect, windowTitle);
 }
 
 void Window::setScreenMode()
@@ -89,13 +90,22 @@ HWND Window::windowHandle() const
 LRESULT CALLBACK Window::windowProcessor(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
     switch(message)
-    {
-        case WM_DESTROY:
-            {
-                PostQuitMessage(0);
-                return 0;
-            } break;
-    }
+	{
+		case WM_DESTROY:
+		{
+			PostQuitMessage(0);
+			return 0;
+		}
 
-    return DefWindowProc (hWnd, message, wParam, lParam);
+		case WM_CLOSE:
+		{
+			PostQuitMessage(0);		
+			return 0;
+		}
+
+		default:
+		{
+			return DefWindowProc(hWnd, message, wParam, lParam);
+		}
+	}
 }

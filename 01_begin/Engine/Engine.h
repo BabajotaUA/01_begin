@@ -1,7 +1,6 @@
 #pragma once
 
 #include "System\Window.h"
-#include "System\Input.h"
 #include <d3d11.h>
 #include <d3dx11.h>
 #include <d3dx10.h>
@@ -16,8 +15,6 @@ class Engine : public Window
 public:
     Engine();
     virtual ~Engine(void);
-
-	Input input;
 
     void CreateGraphics3D(int screenWidth = 0, int screenHeight = 0);
 	void RenderWorld();

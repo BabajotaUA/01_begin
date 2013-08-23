@@ -6,7 +6,7 @@ Engine::Engine() : Window()
 	graphicsBackBuffer = nullptr;
 	graphicsContext = nullptr;
 	graphicsDevice = nullptr;
-	graphicsSwapChain =nullptr;
+	graphicsSwapChain = nullptr;
     std::cout << "GraphicsStarter CREATED\n" << std::endl;
 }
 

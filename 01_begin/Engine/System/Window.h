@@ -1,5 +1,6 @@
 #pragma once
-#include <Windows.h>
+
+#include "Input.h"
 
 const bool FULL_SCREEN = false;
 const bool VSYNC_ENABLED = true;
@@ -9,6 +10,9 @@ class Window
 public:
 	Window(void);
 	virtual ~Window(void);
+
+	Input input;
+
 	void SetApplicationTitle(const LPCWSTR &title);
 
 protected:
