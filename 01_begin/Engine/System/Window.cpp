@@ -4,12 +4,12 @@
 Window::Window()
 {
 	windowTitle = L"Vovo game engine v0.01";
-	std::cout << "Window CREATED\n";
+	std::cout << "Window CREATED\n" << std::endl;
 }
 
 Window::~Window(void)
 {
-	std::cout << "Window DELETED\n";
+	std::cout << "Window DELETED\n" << std::endl;
 }
 
 void Window::createWindowRect(int screenWidth, int screenHeight)
@@ -54,7 +54,7 @@ void Window::createWindowRect(int screenWidth, int screenHeight)
 	ShowCursor(FALSE);
 }
 
-void Window::setApplicationTitle(const LPCWSTR &title)
+void Window::SetApplicationTitle(const LPCWSTR &title)
 {
 	windowTitle = title;
 }

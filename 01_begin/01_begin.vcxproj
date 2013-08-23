@@ -142,12 +142,14 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="App.cpp" />
-    <ClCompile Include="Engine\GraphicsStarter.cpp" />
-    <ClCompile Include="Engine\Window\Window.cpp" />
+    <ClCompile Include="Engine\Engine.cpp" />
+    <ClCompile Include="Engine\System\Input.cpp" />
+    <ClCompile Include="Engine\System\Window.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Engine\GraphicsStarter.h" />
-    <ClInclude Include="Engine\Window\Window.h" />
+    <ClInclude Include="Engine\Engine.h" />
+    <ClInclude Include="Engine\System\Input.h" />
+    <ClInclude Include="Engine\System\Window.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="ClassDiagram.cd" />

@@ -1,27 +1,26 @@
-#include "GraphicsStarter.h"
+#include "Engine.h"
 #include <iostream>
 
-GraphicsStarter::GraphicsStarter() : Window()
+Engine::Engine() : Window()
 {
 	graphicsBackBuffer = nullptr;
 	graphicsContext = nullptr;
 	graphicsDevice = nullptr;
 	graphicsSwapChain =nullptr;
-    std::cout << "GraphicsStarter CREATED\n";
+    std::cout << "GraphicsStarter CREATED\n" << std::endl;
 }
 
-
-GraphicsStarter::~GraphicsStarter(void)
+Engine::~Engine(void)
 {
 	graphicsSwapChain->SetFullscreenState(TRUE, NULL);
 	graphicsSwapChain->Release();
 	graphicsContext->Release();
 	graphicsDevice->Release();
 	graphicsBackBuffer->Release();
-    std::cout << "GraphicsStarter DELETED\n";
+    std::cout << "GraphicsStarter DELETED\n" << std::endl;
 }
 
-void GraphicsStarter::CreateGraphics3D(int screenWidth, int screenHeight)
+void Engine::CreateGraphics3D(int screenWidth, int screenHeight)
 {
 	setScreenResolution(screenWidth, screenHeight);
 	D3DInitialisation();
@@ -29,7 +28,7 @@ void GraphicsStarter::CreateGraphics3D(int screenWidth, int screenHeight)
 	D3DSetViewport();
 }
 
-void GraphicsStarter::setScreenResolution(int width, int height)
+void Engine::setScreenResolution(int width, int height)
 {
 	if (width == 0 || height == 0)
 	{
@@ -43,7 +42,7 @@ void GraphicsStarter::setScreenResolution(int width, int height)
 	}
 }
 
-void GraphicsStarter::D3DInitialisation()
+void Engine::D3DInitialisation()
 {
 	createWindowRect(graphicsWidth, graphicsHeight);
 
@@ -70,7 +69,7 @@ void GraphicsStarter::D3DInitialisation()
         &graphicsContext);
 }
 
-void GraphicsStarter::D3DSetRenderTarget()
+void Engine::D3DSetRenderTarget()
 {
 	ID3D11Texture2D *pBackBuffer = nullptr;
     graphicsSwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID*)&pBackBuffer);
@@ -80,7 +79,7 @@ void GraphicsStarter::D3DSetRenderTarget()
     graphicsContext->OMSetRenderTargets(1, &graphicsBackBuffer, NULL);
 }
 
-void GraphicsStarter::D3DSetViewport()
+void Engine::D3DSetViewport()
 {
 	D3D11_VIEWPORT viewport;
     ZeroMemory(&viewport, sizeof(D3D11_VIEWPORT));
@@ -93,7 +92,7 @@ void GraphicsStarter::D3DSetViewport()
 	graphicsContext->RSSetViewports(1, &viewport);
 }
 
-void GraphicsStarter::RenderWorld()
+void Engine::RenderWorld()
 {
 	graphicsContext->ClearRenderTargetView(graphicsBackBuffer, D3DXCOLOR(0.0f, 0.2f, 0.4f, 1.0f));
 	graphicsSwapChain->Present(0, 0);

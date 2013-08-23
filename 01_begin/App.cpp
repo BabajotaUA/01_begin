@@ -1,23 +1,15 @@
-#include "Engine\GraphicsStarter.h"
+#include "Engine\Engine.h"
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPreviousInstance, LPSTR lpCommandLine, int nCommandShow)
 {
-	auto graphics = GraphicsStarter();
+	auto engine = Engine();
 
-	graphics.CreateGraphics3D(800, 600);
+	engine.CreateGraphics3D(800, 600);
+	engine.SetApplicationTitle(L"My APP");
 
-    MSG msg;
-    while(TRUE)
+	while(engine.input.keyHit(1))
     {
-        if(PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
-        {
-            TranslateMessage(&msg);
-            DispatchMessage(&msg);
-
-            if(msg.message == WM_QUIT)
-                break;
-        }
-		graphics.RenderWorld();
+		engine.RenderWorld();
     }
-	return msg.wParam;
+	return 0;
 }

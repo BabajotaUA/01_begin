@@ -9,7 +9,7 @@ class Window
 public:
 	Window(void);
 	virtual ~Window(void);
-	void setApplicationTitle(const LPCWSTR &title);
+	void SetApplicationTitle(const LPCWSTR &title);
 
 protected:
 	void createWindowRect(int width, int height);

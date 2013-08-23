@@ -1,6 +1,7 @@
 #pragma once
 
-#include "Window\Window.h"
+#include "System\Window.h"
+#include "System\Input.h"
 #include <d3d11.h>
 #include <d3dx11.h>
 #include <d3dx10.h>
@@ -10,11 +11,13 @@
 #pragma comment (lib, "d3dx11.lib")
 #pragma comment (lib, "d3dx10.lib")
 
-class GraphicsStarter : public Window
+class Engine : public Window
 {
 public:
-    GraphicsStarter();
-    virtual ~GraphicsStarter(void);
+    Engine();
+    virtual ~Engine(void);
+
+	Input input;
 
     void CreateGraphics3D(int screenWidth = 0, int screenHeight = 0);
 	void RenderWorld();
