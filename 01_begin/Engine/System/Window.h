@@ -14,6 +14,7 @@ public:
 	Input input;
 
 	void SetApplicationTitle(const LPCWSTR &title);
+	LRESULT CALLBACK messageInterception(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
 
 protected:
 	void createWindowRect(int width, int height);
@@ -25,7 +26,8 @@ private:
 	LPCWSTR windowTitle;
 	int windowWidth, windowHeight, windowPosX, windowPosY;
 
-	static LRESULT CALLBACK windowProcessor(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
-
 	void setScreenMode();
 };
+
+static LRESULT CALLBACK windowProcessor(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
+static Window* ApplicationHandle = nullptr;

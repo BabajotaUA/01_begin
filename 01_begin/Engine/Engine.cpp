@@ -7,7 +7,7 @@ Engine::Engine() : Window()
 	graphicsContext = nullptr;
 	graphicsDevice = nullptr;
 	graphicsSwapChain = nullptr;
-    std::cout << "GraphicsStarter CREATED\n" << std::endl;
+    std::cout << "Engine CREATED\n" << std::endl;
 }
 
 Engine::~Engine(void)
@@ -17,7 +17,7 @@ Engine::~Engine(void)
 	graphicsContext->Release();
 	graphicsDevice->Release();
 	graphicsBackBuffer->Release();
-    std::cout << "GraphicsStarter DELETED\n" << std::endl;
+    std::cout << "Engine DELETED\n" << std::endl;
 }
 
 void Engine::CreateGraphics3D(int screenWidth, int screenHeight)

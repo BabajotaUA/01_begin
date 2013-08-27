@@ -14,6 +14,7 @@ Window::~Window(void)
 
 void Window::createWindowRect(int screenWidth, int screenHeight)
 {
+	ApplicationHandle = this;
     WNDCLASSEX wc;
 	ZeroMemory(&wc, sizeof(WNDCLASSEX));
 	windowHInstance = GetModuleHandle(NULL);
@@ -87,7 +88,30 @@ HWND Window::windowHandle() const
 	return windowRect;
 }
 
-LRESULT CALLBACK Window::windowProcessor(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
+LRESULT CALLBACK Window::messageInterception(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
+{
+	switch(message)
+	{
+		case WM_KEYDOWN:
+		{
+			input.keyDown((unsigned int)wParam);
+			return 0;
+		}
+
+		case WM_KEYUP:
+		{
+			input.keyUp((unsigned int)wParam);
+			return 0;
+		}
+
+		default:
+		{
+				return DefWindowProc(hWnd, message, wParam, lParam);
+		}
+	}
+}
+
+LRESULT CALLBACK windowProcessor(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
     switch(message)
 	{
@@ -105,7 +129,7 @@ LRESULT CALLBACK Window::windowProcessor(HWND hWnd, UINT message, WPARAM wParam,
 
 		default:
 		{
-			return DefWindowProc(hWnd, message, wParam, lParam);
+			return ApplicationHandle->messageInterception(hWnd, message, wParam, lParam);
 		}
 	}
 }
