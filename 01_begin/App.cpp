@@ -7,7 +7,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPreviousInstance, LPSTR lpCom
 	engine.CreateGraphics3D(800, 600);
 	engine.SetApplicationTitle(L"My APP");
 
-	while(!engine.input.isKeyHit(1))
+	while(engine.isRunning())
     {
 		engine.RenderWorld();
     }

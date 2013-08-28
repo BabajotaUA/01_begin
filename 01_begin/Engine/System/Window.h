@@ -14,6 +14,7 @@ public:
 	Input input;
 
 	void SetApplicationTitle(const LPCWSTR &title);
+	bool isRunning();
 	LRESULT CALLBACK messageInterception(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
 
 protected:
@@ -25,6 +26,7 @@ private:
 	HWND windowRect;
 	LPCWSTR windowTitle;
 	int windowWidth, windowHeight, windowPosX, windowPosY;
+	MSG systemInput;
 
 	void setScreenMode();
 };

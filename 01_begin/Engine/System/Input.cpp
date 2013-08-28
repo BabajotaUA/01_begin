@@ -12,26 +12,19 @@ Input::~Input(void)
 	std::cout << "Input DELETED\n" << std::endl;
 }
 
-bool Input::isKeyHit(unsigned short key)
-{
-	MSG systemInput;
-	if(PeekMessage(&systemInput, NULL, 0, 0, PM_REMOVE))
-    {
-        TranslateMessage(&systemInput);
-        DispatchMessage(&systemInput);
 
-        if(systemInput.message == WM_QUIT)
-			return true;
-    }
+
+bool Input::isKeyHit(unsigned char key)
+{
 	return false;
 }
 
-void Input::keyDown(unsigned short key)
+void Input::keyDown(unsigned char key)
 {
 	keys[key] = true;
 }
 
-void Input::keyUp(unsigned short key)
+void Input::keyUp(unsigned char key)
 {
 	keys[key] = false;
 }

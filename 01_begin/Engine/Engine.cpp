@@ -12,7 +12,7 @@ Engine::Engine() : Window()
 
 Engine::~Engine(void)
 {
-	graphicsSwapChain->SetFullscreenState(TRUE, NULL);
+	graphicsSwapChain->SetFullscreenState(FALSE, NULL);
 	graphicsSwapChain->Release();
 	graphicsContext->Release();
 	graphicsDevice->Release();
