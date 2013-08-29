@@ -94,6 +94,7 @@ void Engine::D3DSetViewport()
 
 void Engine::RenderWorld()
 {
-	graphicsContext->ClearRenderTargetView(graphicsBackBuffer, D3DXCOLOR(0.0f, 0.2f, 0.4f, 1.0f));
+	float color[4] = {0.0f, 0.2f, 0.4f, 1.0f};
+	graphicsContext->ClearRenderTargetView(graphicsBackBuffer, color);
 	graphicsSwapChain->Present(0, 0);
 }
