@@ -9,11 +9,12 @@ Window::Window()
 
 Window::~Window(void)
 {
+    DestroyWindow(windowHandle);
 	ApplicationHandle.release();
 	std::cout << "Window DELETED\n" << std::endl;
 }
 
-void Window::createWindowRect(int screenWidth, int screenHeight)
+void Window::createWindowRect(int screenWidth, int screenHeight, bool fullScreen)
 {
 	ApplicationHandle = std::unique_ptr<Window>(this);
     WNDCLASSEX wc;
@@ -34,9 +35,9 @@ void Window::createWindowRect(int screenWidth, int screenHeight)
 	windowWidth = screenWidth;
 	windowHeight = screenHeight;
 
-	setScreenMode();
+    setScreenMode(fullScreen);
 
-	windowRect = CreateWindowEx(WS_EX_APPWINDOW,
+	windowHandle = CreateWindowEx(WS_EX_APPWINDOW,
                           windowTitle,
 						  windowTitle,
 						  WS_OVERLAPPEDWINDOW,
@@ -49,22 +50,27 @@ void Window::createWindowRect(int screenWidth, int screenHeight)
                           windowHInstance,
                           NULL);
 
-	ShowWindow(windowRect, SW_SHOW);
-	SetForegroundWindow(windowRect);
-	SetFocus(windowRect);
+	ShowWindow(windowHandle, SW_SHOW);
+	SetForegroundWindow(windowHandle);
+	SetFocus(windowHandle);
 
 	ShowCursor(FALSE);
 }
 
-void Window::SetApplicationTitle(const LPCWSTR &title)
+HWND Window::getWindowHandle() const
 {
-	windowTitle = title;
-	SetWindowText(windowRect, windowTitle);
+    return windowHandle;
 }
 
-void Window::setScreenMode()
+void Window::setWindowTitle(const LPCWSTR &title)
 {
-	if (FULL_SCREEN)
+	windowTitle = title;
+	SetWindowText(windowHandle, windowTitle);
+}
+
+void Window::setScreenMode(bool fullScreen)
+{
+	if (fullScreen)
 	{
 		DEVMODE devModeScreenSettings;
 		windowPosX = windowPosY = 0;
@@ -84,21 +90,16 @@ void Window::setScreenMode()
 	}
 }
 
-HWND Window::windowHandle() const
-{
-	return windowRect;
-}
-
 LRESULT CALLBACK Window::messageInterception(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
 	switch(message)
 	{
 		case WM_KEYDOWN:
-			input.keyDown((unsigned int)wParam);
+			//input.keyDown((unsigned int)wParam);
 			return 0;
 
 		case WM_KEYUP:
-			input.keyUp((unsigned int)wParam);
+			//input.keyUp((unsigned int)wParam);
 			return 0;
 
 		case WM_MBUTTONDOWN:
@@ -132,15 +133,3 @@ LRESULT CALLBACK Window::windowProcessor(HWND hWnd, UINT message, WPARAM wParam,
 	}
 }
 
-bool Window::isRunning()
-{
-	if(PeekMessage(&systemInput, NULL, 0, 0, PM_REMOVE))
-    {
-        TranslateMessage(&systemInput);
-        DispatchMessage(&systemInput);
-
-        if(systemInput.message == WM_QUIT)
-			return false;
-    }
-	return true;
-}

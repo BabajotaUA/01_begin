@@ -143,11 +143,17 @@
   <ItemGroup>
     <ClCompile Include="App.cpp" />
     <ClCompile Include="Engine\Engine.cpp" />
+    <ClCompile Include="Engine\System\D3D.cpp" />
+    <ClCompile Include="Engine\System\Graphics.cpp" />
     <ClCompile Include="Engine\System\Input.cpp" />
     <ClCompile Include="Engine\System\Window.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Engine.h" />
+    <ClInclude Include="Engine\System\D3D.h" />
+    <ClInclude Include="Engine\System\Graphics.h" />
+    <ClInclude Include="Engine\System\IGraphics.h" />
+    <ClInclude Include="Engine\System\IInput.h" />
     <ClInclude Include="Engine\System\Input.h" />
     <ClInclude Include="Engine\System\Window.h" />
   </ItemGroup>

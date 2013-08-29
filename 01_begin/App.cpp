@@ -4,15 +4,15 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPreviousInstance, LPSTR lpCom
 {
 	auto engine = Engine();
 
-	engine.CreateGraphics3D(800, 600);
-	engine.SetApplicationTitle(L"My APP");
+    engine.graphics.createGraphics3D();
+	engine.graphics.setApplicationTitle(L"My APP");
 
-	while(engine.isRunning())
+    while(engine.isRunning())
     {
 		if(engine.input.isKeyHit(VK_ESCAPE))
 			break;
 
-		engine.RenderWorld();
+		engine.graphics.renderWorld();
     }
 	return 0;
 }

@@ -1,10 +1,7 @@
 #pragma once
 
-#include "Input.h"
+#include <Windows.h>
 #include <memory>
-
-const bool FULL_SCREEN = false;
-const bool VSYNC_ENABLED = true;
 
 class Window
 {
@@ -12,25 +9,19 @@ public:
 	Window(void);
 	virtual ~Window(void);
 
-	Input input;
-
-	void SetApplicationTitle(const LPCWSTR &title);
-	bool isRunning();
+	void setWindowTitle(const LPCWSTR &title);
+    void createWindowRect(int width, int height, bool fullScreen);
 	LRESULT CALLBACK messageInterception(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
-
-protected:
-	void createWindowRect(int width, int height);
-	HWND windowHandle(void) const;
+    HWND getWindowHandle() const;
 
 private:
+    HWND windowHandle;
 	HINSTANCE windowHInstance;
-	HWND windowRect;
 	LPCWSTR windowTitle;
 	int windowWidth, windowHeight, windowPosX, windowPosY;
-	MSG systemInput;
 
 	static LRESULT CALLBACK windowProcessor(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
-	void setScreenMode();
+	void setScreenMode(bool fullScreen);
 };
 
 static std::unique_ptr<Window> ApplicationHandle;
