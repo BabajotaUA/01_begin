@@ -9,12 +9,13 @@ Window::Window()
 
 Window::~Window(void)
 {
+	ApplicationHandle.release();
 	std::cout << "Window DELETED\n" << std::endl;
 }
 
 void Window::createWindowRect(int screenWidth, int screenHeight)
 {
-	ApplicationHandle = this;
+	ApplicationHandle = std::unique_ptr<Window>(this);
     WNDCLASSEX wc;
 	ZeroMemory(&wc, sizeof(WNDCLASSEX));
 	windowHInstance = GetModuleHandle(NULL);
@@ -93,25 +94,22 @@ LRESULT CALLBACK Window::messageInterception(HWND hWnd, UINT message, WPARAM wPa
 	switch(message)
 	{
 		case WM_KEYDOWN:
-		{
 			input.keyDown((unsigned int)wParam);
 			return 0;
-		}
 
 		case WM_KEYUP:
-		{
 			input.keyUp((unsigned int)wParam);
 			return 0;
-		}
+
+		case WM_MBUTTONDOWN:
+
 
 		default:
-		{
-				return DefWindowProc(hWnd, message, wParam, lParam);
-		}
+			return DefWindowProc(hWnd, message, wParam, lParam);
 	}
 }
 
-LRESULT CALLBACK windowProcessor(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
+LRESULT CALLBACK Window::windowProcessor(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
     switch(message)
 	{

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Input.h"
+#include <memory>
 
 const bool FULL_SCREEN = false;
 const bool VSYNC_ENABLED = true;
@@ -28,8 +29,8 @@ private:
 	int windowWidth, windowHeight, windowPosX, windowPosY;
 	MSG systemInput;
 
+	static LRESULT CALLBACK windowProcessor(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
 	void setScreenMode();
 };
 
-static LRESULT CALLBACK windowProcessor(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
-static Window* ApplicationHandle = nullptr;
+static std::unique_ptr<Window> ApplicationHandle;

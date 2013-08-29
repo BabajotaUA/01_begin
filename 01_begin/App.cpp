@@ -9,6 +9,9 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPreviousInstance, LPSTR lpCom
 
 	while(engine.isRunning())
     {
+		if(engine.input.isKeyHit(VK_ESCAPE))
+			break;
+
 		engine.RenderWorld();
     }
 	return 0;

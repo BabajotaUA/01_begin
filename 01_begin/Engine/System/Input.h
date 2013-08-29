@@ -10,11 +10,14 @@ public:
 	virtual ~Input(void);
 
 	bool isKeyHit(unsigned char key);
+	bool isKeyDown(unsigned char key);
+	bool isMouseDown(unsigned char key);
 	
 	void keyDown(unsigned char key);
 	void keyUp(unsigned char key);
 
 private:
-	std::vector<bool> keys;
+	std::vector<bool> keysDown;
+	std::vector<bool> keysHit;
 };
 
