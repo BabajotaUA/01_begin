@@ -3,6 +3,7 @@
 
 Graphics::Graphics(void)
 {
+    graphicsWidth = graphicsHeight = 0;
 }
 
 
@@ -19,7 +20,7 @@ void Graphics::createGraphics3D(int screenWidth, int screenHeight, bool isFullSc
 {
     setScreenResolution(screenWidth, screenHeight);
     graphicsWindow.createWindowRect(graphicsWidth, graphicsHeight, isFullScreen);
-    graphicsD3D.D3DInitialisation(graphicsWindow.getWindowHandle(), isFullScreen);
+    graphicsD3D.D3DInitialisation(graphicsWindow.getWindowHandle(), graphicsWidth, graphicsHeight, isFullScreen);
 	graphicsD3D.D3DSetRenderTarget();
 	graphicsD3D.D3DSetViewport();
 }

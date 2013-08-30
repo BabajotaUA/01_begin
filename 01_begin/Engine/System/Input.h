@@ -12,6 +12,8 @@ public:
 
 	bool isKeyHit(unsigned char key);
 	bool isKeyDown(unsigned char key);
+
+    bool isMouseHit(unsigned char key);
 	bool isMouseDown(unsigned char key);
 
 	LRESULT CALLBACK messageInterception(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
@@ -20,9 +22,8 @@ public:
 private:
 	std::vector<bool> keysDown;
 	std::vector<bool> keysHit;
-
-	void keyDown(unsigned char key);
-	void keyUp(unsigned char key);
+    std::vector<bool> mouseDown;
+    std::vector<bool> mouseHit;
 };
 
 static std::unique_ptr<Input> ApplicationHandle;

@@ -42,11 +42,5 @@
     <ClInclude Include="Engine\System\Graphics.h">
       <Filter>Engine\Core</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\System\IGraphics.h">
-      <Filter>Engine\Core</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\System\IInput.h">
-      <Filter>Engine\Core</Filter>
-    </ClInclude>
   </ItemGroup>
 </Project>

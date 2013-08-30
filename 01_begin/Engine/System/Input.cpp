@@ -6,6 +6,8 @@ Input::Input(void)
 	ApplicationHandle = std::unique_ptr<Input>(this);
 	keysDown = std::vector<bool>(256, false);
 	keysHit = std::vector<bool>(256, false);
+    mouseDown = std::vector<bool>(256, false);
+    mouseHit = std::vector<bool>(256, false);
 	std::cout << "Input CREATED\n" << std::endl;
 }
 
@@ -27,21 +29,16 @@ bool Input::isKeyDown(unsigned char scanCode)
 	return keysDown[scanCode];
 }
 
+bool Input::isMouseHit(unsigned char scanCode)
+{
+    bool result = mouseHit[scanCode];
+    mouseHit[scanCode] = false;
+    return result;
+}
+
 bool Input::isMouseDown(unsigned char scanCode)
 {
-	return false;
-}
-
-void Input::keyDown(unsigned char key)
-{
-	keysDown[key] = true;
-	keysHit[key] = true;
-}
-
-void Input::keyUp(unsigned char key)
-{
-	keysDown[key] = false;
-	keysHit[key] = false;
+    return mouseDown[scanCode];
 }
 
 LRESULT CALLBACK Input::windowProcessor(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
@@ -72,15 +69,20 @@ LRESULT CALLBACK Input::messageInterception(HWND hWnd, UINT message, WPARAM wPar
 	switch(message)
 	{
 		case WM_KEYDOWN:
-			keyDown((unsigned int)wParam);
+			keysDown[(unsigned int)wParam] = keysHit[(unsigned int)wParam] = true;
 			return 0;
 
 		case WM_KEYUP:
-			keyUp((unsigned int)wParam);
+			keysDown[(unsigned int)wParam] = keysHit[(unsigned int)wParam] = false;
 			return 0;
 
 		case WM_MBUTTONDOWN:
+            mouseDown[(unsigned int)wParam] = mouseHit[(unsigned int)wParam] = true;
+            return 0;
 
+        case WM_MBUTTONUP:
+            mouseDown[(unsigned int)wParam] = mouseHit[(unsigned int)wParam] = true;
+            return 0;
 
 		default:
 			return DefWindowProc(hWnd, message, wParam, lParam);

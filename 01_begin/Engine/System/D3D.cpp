@@ -1,69 +1,105 @@
 #include "D3D.h"
 
-
 D3D::D3D(void)
 {
+    screenWidth = screenHeight = videoMemory = 0;
+    d3dBackBuffer = nullptr;
+    d3dContext = nullptr;
+    d3dDevice = nullptr;
+    d3dSwapChain = nullptr;
 }
 
 
 D3D::~D3D(void)
 {
-    graphicsSwapChain->SetFullscreenState(FALSE, NULL);
-	graphicsSwapChain->Release();
-	graphicsContext->Release();
-	graphicsDevice->Release();
-	graphicsBackBuffer->Release();
+    d3dSwapChain->SetFullscreenState(FALSE, NULL);
+	d3dSwapChain->Release();
+	d3dContext->Release();
+	d3dDevice->Release();
+	d3dBackBuffer->Release();
 }
 
-void D3D::getWindowSizeFromHWND(HWND hWnd)
+void D3D::D3DSetupDisplaySettings()
 {
-    LPRECT currentWindowRect;
-    if (GetWindowRect(hWnd, currentWindowRect))
-    {
-        screenWidth = (currentWindowRect->right - currentWindowRect->left);
-        screenHeight = (currentWindowRect->bottom - currentWindowRect->top);
-    }
-    else
-    {
-        screenWidth = 800;
-        screenHeight = 600;
-    }
+    unsigned int numModes, numerator, denominator;
+    IDXGIFactory* factory;
+    IDXGIAdapter* adapter;
+    IDXGIOutput* adapterOutput;
+    DXGI_ADAPTER_DESC adapterDesc;
+
+    CreateDXGIFactory(__uuidof(IDXGIFactory),(void**)&factory);
+    if(FAILED(factory->EnumAdapters(0,&adapter)))
+        throw "";
+    adapter->EnumOutputs(0,&adapterOutput);
+    adapterOutput->GetDisplayModeList(DXGI_FORMAT_R8G8B8A8_UNORM, DXGI_ENUM_MODES_INTERLACED, &numModes, NULL);
+    auto displayModeList = new DXGI_MODE_DESC[numModes];
+    adapterOutput->GetDisplayModeList(DXGI_FORMAT_R8G8B8A8_UNORM, DXGI_ENUM_MODES_INTERLACED, &numModes, displayModeList);
+
+    for(int i=0; i<numModes; i++)
+	{
+		if(displayModeList[i].Width == (unsigned int)screenWidth)
+		{
+			if(displayModeList[i].Height == (unsigned int)screenHeight)
+			{
+				numerator = displayModeList[i].RefreshRate.Numerator;
+				denominator = displayModeList[i].RefreshRate.Denominator;
+			}
+		}
+	}
+
+    adapter->GetDesc(&adapterDesc);
+    videoMemory = adapterDesc.DedicatedVideoMemory / 1024 / 1024;
+    wcstombs(videoAdapterDescription, adapterDesc.Description, 128);
+
+    delete [] displayModeList;
+    adapterOutput->Release();
+    adapter->Release();
+    factory->Release();
 }
 
-void D3D::D3DInitialisation(HWND windowHandle, bool fullScreen)
+void D3D::D3DInitialisation(HWND windowHandle, int width, int height, bool fullScreen)
 {
-    getWindowSizeFromHWND(windowHandle);
-	DXGI_SWAP_CHAIN_DESC swapChainDescription;
-    ZeroMemory(&swapChainDescription, sizeof(DXGI_SWAP_CHAIN_DESC));
+    screenWidth = width; screenHeight = height;
+
+    D3DSetupDisplaySettings();
+    auto featureLevel = D3D_FEATURE_LEVEL_11_0;
+	DXGI_SWAP_CHAIN_DESC swapChainDescription; 
+    ZeroMemory(&swapChainDescription, sizeof(DXGI_SWAP_CHAIN_DESC));    
 
     swapChainDescription.BufferCount = 1;
     swapChainDescription.BufferDesc.Format = DXGI_FORMAT_B8G8R8A8_UNORM;
     swapChainDescription.BufferDesc.Width = screenWidth;
     swapChainDescription.BufferDesc.Height = screenHeight;
+    swapChainDescription.BufferDesc.ScanlineOrdering = DXGI_MODE_SCANLINE_ORDER_UNSPECIFIED;
+    swapChainDescription.BufferDesc.Scaling = DXGI_MODE_SCALING_UNSPECIFIED;
     swapChainDescription.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
 	swapChainDescription.OutputWindow = windowHandle;
     swapChainDescription.SampleDesc.Count = 4;
+    swapChainDescription.SampleDesc.Quality = 1;
 	swapChainDescription.Windowed = !fullScreen;
-	swapChainDescription.Flags = DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH;
+	swapChainDescription.Flags = 0;//DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH;
 
-    D3D11CreateDeviceAndSwapChain(NULL,
+    if(FAILED(
+        D3D11CreateDeviceAndSwapChain(
+        NULL,
         D3D_DRIVER_TYPE_HARDWARE,
-        NULL, NULL, NULL, NULL,
+        NULL, 0, &featureLevel, 1,
         D3D11_SDK_VERSION,
         &swapChainDescription,
-        &graphicsSwapChain,
-        &graphicsDevice, NULL,
-        &graphicsContext);
+        &d3dSwapChain,
+        &d3dDevice, NULL,
+        &d3dContext)))
+        throw "";
 }
 
 void D3D::D3DSetRenderTarget()
 {
 	ID3D11Texture2D *pBackBuffer = nullptr;
-    graphicsSwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID*)&pBackBuffer);
-	graphicsDevice->CreateRenderTargetView(pBackBuffer, NULL, &graphicsBackBuffer);
+    d3dSwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID*)&pBackBuffer);
+	d3dDevice->CreateRenderTargetView(pBackBuffer, NULL, &d3dBackBuffer);
     pBackBuffer->Release();
 
-    graphicsContext->OMSetRenderTargets(1, &graphicsBackBuffer, NULL);
+    d3dContext->OMSetRenderTargets(1, &d3dBackBuffer, NULL);
 }
 
 void D3D::D3DSetViewport()
@@ -76,12 +112,12 @@ void D3D::D3DSetViewport()
     viewport.Width = screenWidth;
     viewport.Height = screenHeight;
 
-	graphicsContext->RSSetViewports(1, &viewport);
+	d3dContext->RSSetViewports(1, &viewport);
 }
 
 void D3D::D3DDraw()
 {
 	float color[4] = {0.0f, 0.2f, 0.4f, 1.0f};
-	graphicsContext->ClearRenderTargetView(graphicsBackBuffer, color);
-	graphicsSwapChain->Present(0, 0);
+	d3dContext->ClearRenderTargetView(d3dBackBuffer, color);
+	d3dSwapChain->Present(0, 0);
 }
