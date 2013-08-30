@@ -18,16 +18,16 @@ D3D::~D3D(void)
 void D3D::getWindowSizeFromHWND(HWND hWnd)
 {
     LPRECT currentWindowRect;
-    /*if (GetWindowRect(hWnd, currentWindowRect))
+    if (GetWindowRect(hWnd, currentWindowRect))
     {
         screenWidth = (currentWindowRect->right - currentWindowRect->left);
         screenHeight = (currentWindowRect->bottom - currentWindowRect->top);
     }
     else
-    {*/
-        screenWidth = 400;
-        screenHeight = 300;
-    //}
+    {
+        screenWidth = 800;
+        screenHeight = 600;
+    }
 }
 
 void D3D::D3DInitialisation(HWND windowHandle, bool fullScreen)

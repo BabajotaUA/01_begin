@@ -11,7 +11,6 @@ public:
 
 	void setWindowTitle(const LPCWSTR &title);
     void createWindowRect(int width, int height, bool fullScreen);
-	LRESULT CALLBACK messageInterception(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
     HWND getWindowHandle() const;
 
 private:
@@ -20,8 +19,5 @@ private:
 	LPCWSTR windowTitle;
 	int windowWidth, windowHeight, windowPosX, windowPosY;
 
-	static LRESULT CALLBACK windowProcessor(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
 	void setScreenMode(bool fullScreen);
 };
-
-static std::unique_ptr<Window> ApplicationHandle;

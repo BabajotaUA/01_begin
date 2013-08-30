@@ -1,5 +1,6 @@
 #include "Window.h"
 #include <iostream>
+#include "Input.h"
 
 Window::Window()
 {
@@ -10,18 +11,16 @@ Window::Window()
 Window::~Window(void)
 {
     DestroyWindow(windowHandle);
-	ApplicationHandle.release();
 	std::cout << "Window DELETED\n" << std::endl;
 }
 
 void Window::createWindowRect(int screenWidth, int screenHeight, bool fullScreen)
 {
-	ApplicationHandle = std::unique_ptr<Window>(this);
     WNDCLASSEX wc;
 	ZeroMemory(&wc, sizeof(WNDCLASSEX));
 	windowHInstance = GetModuleHandle(NULL);
     wc.style = CS_HREDRAW | CS_VREDRAW | CS_OWNDC;
-	wc.lpfnWndProc = windowProcessor;
+	wc.lpfnWndProc = Input::windowProcessor;
     wc.hInstance = windowHInstance;
 	wc.hIcon = LoadIcon(NULL, IDI_WINLOGO);
 	wc.hIconSm = wc.hIcon;
@@ -89,47 +88,3 @@ void Window::setScreenMode(bool fullScreen)
 		windowPosY = (GetSystemMetrics(SM_CYSCREEN) - windowHeight) / 2;
 	}
 }
-
-LRESULT CALLBACK Window::messageInterception(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
-{
-	switch(message)
-	{
-		case WM_KEYDOWN:
-			//input.keyDown((unsigned int)wParam);
-			return 0;
-
-		case WM_KEYUP:
-			//input.keyUp((unsigned int)wParam);
-			return 0;
-
-		case WM_MBUTTONDOWN:
-
-
-		default:
-			return DefWindowProc(hWnd, message, wParam, lParam);
-	}
-}
-
-LRESULT CALLBACK Window::windowProcessor(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
-{
-    switch(message)
-	{
-		case WM_DESTROY:
-		{
-			PostQuitMessage(0);
-			return 0;
-		}
-
-		case WM_CLOSE:
-		{
-			PostQuitMessage(0);		
-			return 0;
-		}
-
-		default:
-		{
-			return ApplicationHandle->messageInterception(hWnd, message, wParam, lParam);
-		}
-	}
-}
-
