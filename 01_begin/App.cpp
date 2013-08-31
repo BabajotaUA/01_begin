@@ -4,7 +4,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPreviousInstance, LPSTR lpCom
 {
 	auto engine = Engine();
 
-    engine.graphics.createGraphics3D();
+    engine.graphics.createGraphics3D(1024,768);
 	engine.graphics.setApplicationTitle(L"My APP");
 
     while(engine.isRunning())

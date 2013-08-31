@@ -6,8 +6,8 @@ Input::Input(void)
 	ApplicationHandle = std::unique_ptr<Input>(this);
 	keysDown = std::vector<bool>(256, false);
 	keysHit = std::vector<bool>(256, false);
-    mouseDown = std::vector<bool>(256, false);
-    mouseHit = std::vector<bool>(256, false);
+    mouseDown = std::vector<bool>(6000, false);
+    mouseHit = std::vector<bool>(6000, false);
 	std::cout << "Input CREATED\n" << std::endl;
 }
 

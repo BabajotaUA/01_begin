@@ -1,4 +1,5 @@
 #include "D3D.h"
+#include <stdexcept>
 
 D3D::D3D(void)
 {
@@ -21,7 +22,7 @@ D3D::~D3D(void)
 
 void D3D::D3DSetupDisplaySettings()
 {
-    unsigned int numModes, numerator, denominator;
+    UINT numModes=0, numerator=0, denominator=0;
     IDXGIFactory* factory;
     IDXGIAdapter* adapter;
     IDXGIOutput* adapterOutput;
@@ -29,7 +30,7 @@ void D3D::D3DSetupDisplaySettings()
 
     CreateDXGIFactory(__uuidof(IDXGIFactory),(void**)&factory);
     if(FAILED(factory->EnumAdapters(0,&adapter)))
-        throw "";
+		throw std::invalid_argument("");
     adapter->EnumOutputs(0,&adapterOutput);
     adapterOutput->GetDisplayModeList(DXGI_FORMAT_R8G8B8A8_UNORM, DXGI_ENUM_MODES_INTERLACED, &numModes, NULL);
     auto displayModeList = new DXGI_MODE_DESC[numModes];
@@ -75,9 +76,8 @@ void D3D::D3DInitialisation(HWND windowHandle, int width, int height, bool fullS
     swapChainDescription.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
 	swapChainDescription.OutputWindow = windowHandle;
     swapChainDescription.SampleDesc.Count = 4;
-    swapChainDescription.SampleDesc.Quality = 1;
 	swapChainDescription.Windowed = !fullScreen;
-	swapChainDescription.Flags = 0;//DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH;
+	swapChainDescription.Flags = 0;
 
     if(FAILED(
         D3D11CreateDeviceAndSwapChain(
@@ -89,7 +89,7 @@ void D3D::D3DInitialisation(HWND windowHandle, int width, int height, bool fullS
         &d3dSwapChain,
         &d3dDevice, NULL,
         &d3dContext)))
-        throw "";
+        throw std::invalid_argument("D3D11CreateDeviceAndSwapChain - FAIL");
 }
 
 void D3D::D3DSetRenderTarget()

@@ -1,5 +1,5 @@
 #include "Graphics.h"
-
+#include <stdexcept>
 
 Graphics::Graphics(void)
 {
@@ -18,11 +18,18 @@ void Graphics::setApplicationTitle(const LPCWSTR &title)
 
 void Graphics::createGraphics3D(int screenWidth, int screenHeight, bool isFullScreen)
 {
-    setScreenResolution(screenWidth, screenHeight);
-    graphicsWindow.createWindowRect(graphicsWidth, graphicsHeight, isFullScreen);
-    graphicsD3D.D3DInitialisation(graphicsWindow.getWindowHandle(), graphicsWidth, graphicsHeight, isFullScreen);
-	graphicsD3D.D3DSetRenderTarget();
-	graphicsD3D.D3DSetViewport();
+	try
+	{
+		setScreenResolution(screenWidth, screenHeight);
+		graphicsWindow.createWindowRect(graphicsWidth, graphicsHeight, isFullScreen);
+		graphicsD3D.D3DInitialisation(graphicsWindow.getWindowHandle(), graphicsWidth, graphicsHeight, isFullScreen);
+		graphicsD3D.D3DSetRenderTarget();
+		graphicsD3D.D3DSetViewport();
+	}
+	catch (const std::invalid_argument &e)
+	{
+		MessageBox(graphicsWindow.getWindowHandle(), (LPCWSTR)(e.what()), L"sdfs",MB_OK);
+	}
 }
 
 void Graphics::setScreenResolution(int width, int height)
