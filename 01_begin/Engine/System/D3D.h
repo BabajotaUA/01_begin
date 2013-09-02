@@ -25,7 +25,15 @@ private:
     ID3D11Device* d3dDevice;
     ID3D11DeviceContext* d3dContext;
 	ID3D11RenderTargetView* d3dBackBuffer;
+    ID3D11Texture2D* d3dDepthStencilBuffer;
+    ID3D11DepthStencilState* d3dDepthStencilState;
+    ID3D11DepthStencilView* d3dDepthStencilView;
+    ID3D11RasterizerState* d3dRasterizerState;
 
-    void D3DSetupDisplaySettings();
+    DXGI_RATIONAL SetupDisplaySettings();
+    void createBackBuffer();
+    void createDepthBuffer();
+    void createDepthStencilState();
+    void createDepthStencilView();
 };
 
