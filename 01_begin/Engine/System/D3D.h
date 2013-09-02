@@ -3,6 +3,9 @@
 #include <d3d11.h>
 #include <dxgi.h>
 #include <d3dcommon.h>
+#include <DirectXMath.h>
+
+using namespace DirectX;
 
 #pragma comment (lib, "d3d11.lib")
 #pragma comment (lib, "dxgi.lib")
@@ -28,6 +31,9 @@ private:
     ID3D11DepthStencilState* d3dDepthStencilState;
     ID3D11DepthStencilView* d3dDepthStencilView;
     ID3D11RasterizerState* d3dRasterizerState;
+	XMMATRIX d3dProjectionMatrix;
+	XMMATRIX d3dWorldMatrix;
+	XMMATRIX d3dOrtoMatrix;
 
     DXGI_RATIONAL SetupDisplaySettings();
     void setRenderTarget();
@@ -37,5 +43,6 @@ private:
     void createDepthBuffer();
     void createDepthStencilState();
     void createDepthStencilView();
+	void createMatrix();
 };
 

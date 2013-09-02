@@ -14,7 +14,6 @@ D3D::D3D(void)
     d3dRasterizerState = nullptr;
 }
 
-
 D3D::~D3D(void)
 {
     d3dSwapChain->SetFullscreenState(FALSE, NULL);
@@ -77,6 +76,7 @@ void D3D::Initialisation(HWND windowHandle, int width, int height, bool fullScre
     createDevice(windowHandle);
     setRenderTarget();
     setViewport();
+	createMatrix();
 }
 
 void D3D::createDevice(HWND hWnd)
@@ -205,6 +205,15 @@ void D3D::setViewport()
 
     d3dContext->RSSetState(d3dRasterizerState);
 	d3dContext->RSSetViewports(1, &viewport);
+}
+
+void D3D::createMatrix()
+{
+	auto fieldOfView = XM_PI / 4.0f;
+	auto screenAspect = (float)(screenWidth / screenHeight);
+	d3dProjectionMatrix = XMMatrixPerspectiveFovLH(fieldOfView, screenAspect, 0.001f, 1000.0f);
+	d3dWorldMatrix = XMMatrixIdentity();
+	d3dOrtoMatrix = XMMatrixOrthographicLH(screenWidth,screenAspect,0.001f, 1000.0f);
 }
 
 void D3D::D3DDraw()
