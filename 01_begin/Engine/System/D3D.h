@@ -13,14 +13,13 @@ public:
     D3D(void);
     virtual ~D3D(void);
 
-    void D3DInitialisation(HWND windowHandle, int width, int height, bool fullScreen);
-	void D3DSetRenderTarget();
-	void D3DSetViewport();
+    void Initialisation(HWND windowHandle, int width, int height, bool fullScreen);
     void D3DDraw();
 
 private:
     int screenWidth, screenHeight, videoMemory;
     char videoAdapterDescription[128];
+    bool fullScreen;
     IDXGISwapChain* d3dSwapChain;
     ID3D11Device* d3dDevice;
     ID3D11DeviceContext* d3dContext;
@@ -31,6 +30,9 @@ private:
     ID3D11RasterizerState* d3dRasterizerState;
 
     DXGI_RATIONAL SetupDisplaySettings();
+    void setRenderTarget();
+	void setViewport();
+    void createDevice(HWND hWnd);
     void createBackBuffer();
     void createDepthBuffer();
     void createDepthStencilState();

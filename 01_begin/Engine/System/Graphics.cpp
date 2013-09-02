@@ -22,9 +22,7 @@ void Graphics::createGraphics3D(int screenWidth, int screenHeight, bool isFullSc
 	{
 		setScreenResolution(screenWidth, screenHeight);
 		graphicsWindow.createWindowRect(graphicsWidth, graphicsHeight, isFullScreen);
-		graphicsD3D.D3DInitialisation(graphicsWindow.getWindowHandle(), graphicsWidth, graphicsHeight, isFullScreen);
-		graphicsD3D.D3DSetRenderTarget();
-		graphicsD3D.D3DSetViewport();
+		graphicsD3D.Initialisation(graphicsWindow.getWindowHandle(), graphicsWidth, graphicsHeight, isFullScreen);
 	}
 	catch (const std::invalid_argument &e)
 	{

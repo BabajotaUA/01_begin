@@ -22,8 +22,6 @@ public:
 private:
 	std::vector<bool> keysDown;
 	std::vector<bool> keysHit;
-    std::vector<bool> mouseDown;
-    std::vector<bool> mouseHit;
 };
 
 static std::unique_ptr<Input> ApplicationHandle;

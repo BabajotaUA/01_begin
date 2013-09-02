@@ -37,6 +37,8 @@ DXGI_RATIONAL D3D::SetupDisplaySettings()
     DXGI_ADAPTER_DESC adapterDesc;
     DXGI_RATIONAL refreshRate;
 
+    ZeroMemory(&refreshRate, sizeof(DXGI_RATIONAL));
+
     CreateDXGIFactory(__uuidof(IDXGIFactory),(void**)&factory);
     if(FAILED(factory->EnumAdapters(0,&adapter)))
 		throw std::invalid_argument("");
@@ -68,10 +70,17 @@ DXGI_RATIONAL D3D::SetupDisplaySettings()
     return refreshRate;
 }
 
-void D3D::D3DInitialisation(HWND windowHandle, int width, int height, bool fullScreen)
+void D3D::Initialisation(HWND windowHandle, int width, int height, bool fullScreenVal)
 {
     screenWidth = width; screenHeight = height;
+    fullScreen = fullScreenVal;
+    createDevice(windowHandle);
+    setRenderTarget();
+    setViewport();
+}
 
+void D3D::createDevice(HWND hWnd)
+{
     auto featureLevel = D3D_FEATURE_LEVEL_11_0;
 	DXGI_SWAP_CHAIN_DESC swapChainDescription; 
     ZeroMemory(&swapChainDescription, sizeof(DXGI_SWAP_CHAIN_DESC));    
@@ -84,7 +93,7 @@ void D3D::D3DInitialisation(HWND windowHandle, int width, int height, bool fullS
     swapChainDescription.BufferDesc.Scaling = DXGI_MODE_SCALING_UNSPECIFIED;
     swapChainDescription.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
     swapChainDescription.BufferDesc.RefreshRate = SetupDisplaySettings();
-	swapChainDescription.OutputWindow = windowHandle;
+	swapChainDescription.OutputWindow = hWnd;
     swapChainDescription.SampleDesc.Count = 4;
 	swapChainDescription.Windowed = !fullScreen;
 	swapChainDescription.Flags = 0;
@@ -162,7 +171,7 @@ void D3D::createDepthStencilView()
     d3dDevice->CreateDepthStencilView(d3dDepthStencilBuffer, &depthStencilViewDesc, &d3dDepthStencilView);
 }
 
-void D3D::D3DSetRenderTarget()
+void D3D::setRenderTarget()
 {
     createBackBuffer();
     createDepthBuffer();
@@ -171,7 +180,7 @@ void D3D::D3DSetRenderTarget()
     d3dContext->OMSetRenderTargets(1, &d3dBackBuffer, d3dDepthStencilView);
 }
 
-void D3D::D3DSetViewport()
+void D3D::setViewport()
 {
     D3D11_RASTERIZER_DESC rasterDesc;
     ZeroMemory(&rasterDesc, sizeof(D3D11_RASTERIZER_DESC));
@@ -202,5 +211,5 @@ void D3D::D3DDraw()
 {
 	float color[4] = {0.0f, 0.2f, 0.4f, 1.0f};
 	d3dContext->ClearRenderTargetView(d3dBackBuffer, color);
-	d3dSwapChain->Present(0, 0);
+	d3dSwapChain->Present(1, 0);
 }
