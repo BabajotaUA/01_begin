@@ -220,5 +220,6 @@ void D3D::D3DDraw()
 {
 	float color[4] = {0.0f, 0.2f, 0.4f, 1.0f};
 	d3dContext->ClearRenderTargetView(d3dBackBuffer, color);
+    d3dContext->ClearDepthStencilView(d3dDepthStencilView,D3D11_CLEAR_DEPTH, 1.0f, 0);
 	d3dSwapChain->Present(1, 0);
 }

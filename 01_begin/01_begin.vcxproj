@@ -147,17 +147,17 @@
   <ItemGroup>
     <ClCompile Include="App.cpp" />
     <ClCompile Include="Engine\Engine.cpp" />
-    <ClCompile Include="Engine\System\D3D.cpp" />
-    <ClCompile Include="Engine\System\Graphics.cpp" />
-    <ClCompile Include="Engine\System\Input.cpp" />
-    <ClCompile Include="Engine\System\Window.cpp" />
+    <ClCompile Include="Engine\Core\D3D.cpp" />
+    <ClCompile Include="Engine\Core\Graphics.cpp" />
+    <ClCompile Include="Engine\Core\Input.cpp" />
+    <ClCompile Include="Engine\Core\Window.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Engine.h" />
-    <ClInclude Include="Engine\System\D3D.h" />
-    <ClInclude Include="Engine\System\Graphics.h" />
-    <ClInclude Include="Engine\System\Input.h" />
-    <ClInclude Include="Engine\System\Window.h" />
+    <ClInclude Include="Engine\Core\D3D.h" />
+    <ClInclude Include="Engine\Core\Graphics.h" />
+    <ClInclude Include="Engine\Core\Input.h" />
+    <ClInclude Include="Engine\Core\Window.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
