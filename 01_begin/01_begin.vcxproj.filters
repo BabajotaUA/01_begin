@@ -25,6 +25,9 @@
     <Filter Include="Engine\Core">
       <UniqueIdentifier>{55d28e06-4801-4fc6-a00b-87a4053f35e5}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Engine\Shaders">
+      <UniqueIdentifier>{e27e1736-b6a2-4dde-b6aa-fcc871abdd20}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Engine.h">
@@ -42,5 +45,10 @@
     <ClInclude Include="Engine\Core\Window.h">
       <Filter>Engine\Core</Filter>
     </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="Engine\Shaders\PixelShader.hlsl">
+      <Filter>Engine\Shaders</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>
