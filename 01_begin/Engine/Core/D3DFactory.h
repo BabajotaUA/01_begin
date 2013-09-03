@@ -14,6 +14,7 @@ protected:
     int screenWidth, screenHeight, videoMemory;
     char videoAdapterDescription[128];
     bool fullScreen;
+    HWND windowHandle;
     IDXGISwapChain* d3dSwapChain;
     ID3D11Device* d3dDevice;
     ID3D11DeviceContext* d3dContext;
@@ -26,7 +27,7 @@ protected:
     DXGI_RATIONAL SetupDisplaySettings();
     void setRenderTarget();
 	void setViewport();
-    void createDevice(HWND hWnd);
+    void createDevice();
     void createBackBuffer();
     void createDepthBuffer();
     void createDepthStencilState();

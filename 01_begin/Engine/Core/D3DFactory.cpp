@@ -3,18 +3,37 @@
 
 D3DFactory::D3DFactory(void)
 {
+    screenWidth = screenHeight = videoMemory = 0;
+    d3dBackBuffer = nullptr;
+    d3dContext = nullptr;
+    d3dDevice = nullptr;
+    d3dSwapChain = nullptr;
+    d3dDepthStencilBuffer = nullptr;
+    d3dDepthStencilState = nullptr;
+    d3dDepthStencilView = nullptr;
+    d3dRasterizerState = nullptr;
 }
 
 
 D3DFactory::~D3DFactory(void)
 {
+    d3dSwapChain->SetFullscreenState(FALSE, NULL);
+	d3dSwapChain->Release();
+	d3dContext->Release();
+	d3dDevice->Release();
+	d3dBackBuffer->Release();
+    d3dDepthStencilBuffer->Release();
+    d3dDepthStencilState->Release();
+    d3dDepthStencilView->Release();
+    d3dRasterizerState->Release();
 }
 
-void D3DFactory::Initialisation(HWND windowHandle, int width, int height, bool fullScreenVal)
+void D3DFactory::Initialisation(HWND windowHandlePtr, int width, int height, bool fullScreenVal)
 {
+    windowHandle = windowHandlePtr;
     screenWidth = width; screenHeight = height;
     fullScreen = fullScreenVal;
-    createDevice(windowHandle);
+    createDevice();
     setRenderTarget();
     setViewport();
 }
@@ -61,7 +80,7 @@ DXGI_RATIONAL D3DFactory::SetupDisplaySettings()
     return refreshRate;
 }
 
-void D3DFactory::createDevice(HWND hWnd)
+void D3DFactory::createDevice()
 {
     auto featureLevel = D3D_FEATURE_LEVEL_11_0;
 	DXGI_SWAP_CHAIN_DESC swapChainDescription; 
@@ -75,7 +94,7 @@ void D3DFactory::createDevice(HWND hWnd)
     swapChainDescription.BufferDesc.Scaling = DXGI_MODE_SCALING_UNSPECIFIED;
     swapChainDescription.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
     swapChainDescription.BufferDesc.RefreshRate = SetupDisplaySettings();
-	swapChainDescription.OutputWindow = hWnd;
+    swapChainDescription.OutputWindow = windowHandle;
     swapChainDescription.SampleDesc.Count = 4;
 	swapChainDescription.Windowed = !fullScreen;
 	swapChainDescription.Flags = 0;

@@ -17,7 +17,9 @@
     <ClCompile Include="Engine\Core\Window.cpp">
       <Filter>Engine\Core</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\Core\D3DFactory.cpp" />
+    <ClCompile Include="Engine\Core\D3DFactory.cpp">
+      <Filter>Engine\Core</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Engine">
@@ -46,7 +48,9 @@
     <ClInclude Include="Engine\Core\Window.h">
       <Filter>Engine\Core</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\Core\D3DFactory.h" />
+    <ClInclude Include="Engine\Core\D3DFactory.h">
+      <Filter>Engine\Core</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Engine\Shaders\PixelShader.hlsl">

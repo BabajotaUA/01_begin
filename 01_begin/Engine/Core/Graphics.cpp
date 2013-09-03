@@ -23,6 +23,7 @@ void Graphics::createGraphics3D(int screenWidth, int screenHeight, bool isFullSc
 		setScreenResolution(screenWidth, screenHeight);
 		graphicsWindow.createWindowRect(graphicsWidth, graphicsHeight, isFullScreen);
 		graphicsD3D.Initialisation(graphicsWindow.getWindowHandle(), graphicsWidth, graphicsHeight, isFullScreen);
+        graphicsD3D.InitalisePipeline();
         createMatrices();
 	}
 	catch (const std::invalid_argument &e)
@@ -56,5 +57,5 @@ void Graphics::createMatrices()
 
 void Graphics::renderWorld()
 {
-    graphicsD3D.D3DDraw();
+    graphicsD3D.Draw();
 }
