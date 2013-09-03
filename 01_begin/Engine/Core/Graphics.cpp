@@ -23,6 +23,7 @@ void Graphics::createGraphics3D(int screenWidth, int screenHeight, bool isFullSc
 		setScreenResolution(screenWidth, screenHeight);
 		graphicsWindow.createWindowRect(graphicsWidth, graphicsHeight, isFullScreen);
 		graphicsD3D.Initialisation(graphicsWindow.getWindowHandle(), graphicsWidth, graphicsHeight, isFullScreen);
+        createMatrices();
 	}
 	catch (const std::invalid_argument &e)
 	{
@@ -42,6 +43,15 @@ void Graphics::setScreenResolution(int width, int height)
 		graphicsWidth = width;
 		graphicsHeight = height;
 	}
+}
+
+void Graphics::createMatrices()
+{
+	auto fieldOfView = XM_PI / 4.0f;
+	auto screenAspect = (float)(graphicsWidth / graphicsHeight);
+	projectionMatrix = XMMatrixPerspectiveFovLH(fieldOfView, screenAspect, 0.001f, 1000.0f);
+	worldMatrix = XMMatrixIdentity();
+	ortoMatrix = XMMatrixOrthographicLH((FLOAT)graphicsWidth, (FLOAT)graphicsHeight, 0.001f, 1000.0f);
 }
 
 void Graphics::renderWorld()

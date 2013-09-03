@@ -1,7 +1,8 @@
 #include "Engine\Engine.h"
 
-int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPreviousInstance, LPSTR lpCommandLine, int nCommandShow)
+int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPreviousInstance, _In_ LPSTR lpCommandLine, _In_ int nCommandShow)
 {
+    
 	auto engine = Engine();
 
     engine.graphics.createGraphics3D(1024,768);
