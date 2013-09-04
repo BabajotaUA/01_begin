@@ -7,7 +7,6 @@ Graphics::Graphics(void)
     ok = true;
 }
 
-
 Graphics::~Graphics(void)
 {
 }
@@ -17,9 +16,22 @@ bool Graphics::isOK() const
     return ok;
 }
 
+void Graphics::showErrorMessage(const char* title, const std::exception &e)
+{
+    MessageBoxA(graphicsWindow.getWindowHandle(), e.what(), title, MB_OK | MB_ICONERROR);
+    ok = false;
+}
+
 void Graphics::setApplicationTitle(const LPCWSTR &title)
 {
-    graphicsWindow.setWindowTitle(title);
+    try
+    {
+        graphicsWindow.setWindowTitle(title);
+    }
+    catch (const std::exception &e)
+    {
+        showErrorMessage("ERROR: Window title wasn't seted!", e);
+    }
 }
 
 void Graphics::createGraphics3D(int screenWidth, int screenHeight, bool isFullScreen)
@@ -34,8 +46,7 @@ void Graphics::createGraphics3D(int screenWidth, int screenHeight, bool isFullSc
 	}
     catch (const std::exception &e)
 	{
-        MessageBoxA(graphicsWindow.getWindowHandle(), e.what(), "ERROR: Graphics wasn't initialisated!", MB_OK | MB_ICONERROR);
-        ok = false;
+        showErrorMessage("ERROR: Graphics wasn't initialisated!", e);
 	}
 }
 

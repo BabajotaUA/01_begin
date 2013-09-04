@@ -7,11 +7,11 @@
 #pragma comment (lib, "dxgi.lib")
 #pragma comment (lib, "d3dcompiler.lib")
 
-class D3D : public D3DFactory
+class D3DPipeline : public D3DFactory
 {
 public:
-    D3D(void);
-    virtual ~D3D(void);
+    D3DPipeline(void);
+    virtual ~D3DPipeline(void);
 
     void InitialisePipeline();
     void Draw();

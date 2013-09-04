@@ -1,5 +1,6 @@
 #include "Window.h"
 #include <iostream>
+#include <exception>
 #include "Input.h"
 
 Window::Window()
@@ -64,7 +65,8 @@ HWND Window::getWindowHandle() const
 void Window::setWindowTitle(const LPCWSTR &title)
 {
 	windowTitle = title;
-	SetWindowText(windowHandle, windowTitle);
+	if(!SetWindowText(windowHandle, windowTitle))
+        throw std::exception("setWindowTitle() - FAILED");
 }
 
 void Window::setScreenMode(bool fullScreen)

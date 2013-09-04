@@ -1,15 +1,15 @@
-#include "D3D.h"
-#include <stdexcept>
+#include "D3DPipeline.h"
+#include <exception>
 #include <string>
 #include <vector>
 
-D3D::D3D(void) : D3DFactory()
+D3DPipeline::D3DPipeline(void) : D3DFactory()
 {
     vertexShader = nullptr;
     pixelShader = nullptr;
 }
 
-D3D::~D3D(void)
+D3DPipeline::~D3DPipeline(void)
 {
     if(vertexShader)
         vertexShader->Release();
@@ -18,22 +18,22 @@ D3D::~D3D(void)
 }
 
 
-ID3D11DeviceContext* D3D::getContext() const
+ID3D11DeviceContext* D3DPipeline::getContext() const
 {
     return d3dContext;
 }
 
-ID3D11Device* D3D::getDevice() const
+ID3D11Device* D3DPipeline::getDevice() const
 {
     return d3dDevice;
 }
 
-IDXGISwapChain* D3D::getSwapChain() const
+IDXGISwapChain* D3DPipeline::getSwapChain() const
 {
     return d3dSwapChain;
 }
 
-void D3D::InitialisePipeline()
+void D3DPipeline::InitialisePipeline()
 {
     ID3D10Blob* errorMessage = nullptr;
 	ID3D10Blob* vertexShaderBuffer = nullptr;
@@ -73,7 +73,7 @@ void D3D::InitialisePipeline()
     d3dContext->PSSetShader(pixelShader, nullptr, 0);
 }
 
-void D3D::Draw()
+void D3DPipeline::Draw()
 {
     std::vector<float> color(4, 0.2f);
     d3dContext->ClearRenderTargetView(d3dBackBuffer, color.data());

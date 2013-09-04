@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Window.h"
-#include "D3D.h"
+#include "D3DPipeline.h"
 #include <DirectXMath.h>
 
 using namespace DirectX;
@@ -21,7 +21,7 @@ private:
     bool ok;
     int graphicsWidth, graphicsHeight;
 
-    D3D graphicsD3D;
+    D3DPipeline graphicsD3D;
     Window graphicsWindow;
     XMMATRIX projectionMatrix;
 	XMMATRIX worldMatrix;
@@ -29,5 +29,6 @@ private:
 
     void setScreenResolution(int width, int height);
     void createMatrices();
+    void showErrorMessage(const char* title, const std::exception &e);
 };
 
