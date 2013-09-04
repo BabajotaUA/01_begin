@@ -13,7 +13,7 @@ public:
     D3D(void);
     virtual ~D3D(void);
 
-    void InitalisePipeline();
+    void InitialisePipeline();
     void Draw();
 
     IDXGISwapChain* getSwapChain() const;
@@ -21,10 +21,10 @@ public:
     ID3D11DeviceContext* getContext() const;
 
 private:
+    
     ID3D11VertexShader* vertexShader;
     ID3D11PixelShader* pixelShader;
 
-    void outputShaderErrorMessage(ID3D10Blob* errorMessage, HWND hwnd, WCHAR* shaderFilename);
-    void clearShaderFileBuffers();
+    void generateErrorLog(ID3D10Blob* errorMessage);
 };
 

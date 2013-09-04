@@ -15,8 +15,10 @@ public:
     void renderWorld();
     void createGraphics3D(int screenWidth = 0, int screenHeight = 0, bool fullScreen = false);
     void setApplicationTitle(const LPCWSTR &title);
+    bool isOK() const;
 
 private:
+    bool ok;
     int graphicsWidth, graphicsHeight;
 
     D3D graphicsD3D;

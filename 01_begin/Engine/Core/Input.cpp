@@ -6,6 +6,7 @@ Input::Input(void)
 	ApplicationHandle = std::unique_ptr<Input>(this);
 	keysDown = std::vector<bool>(256, false);
 	keysHit = std::vector<bool>(256, false);
+    ok = true;
 	std::cout << "Input CREATED\n" << std::endl;
 }
 
@@ -13,6 +14,11 @@ Input::~Input(void)
 {
 	ApplicationHandle.release();
 	std::cout << "Input DELETED\n" << std::endl;
+}
+
+bool Input::isOK() const
+{
+    return ok;
 }
 
 bool Input::isKeyHit(unsigned char key)

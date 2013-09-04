@@ -1,5 +1,5 @@
 #include "D3DFactory.h"
-#include <stdexcept>
+#include <exception>
 
 D3DFactory::D3DFactory(void)
 {
@@ -17,15 +17,25 @@ D3DFactory::D3DFactory(void)
 
 D3DFactory::~D3DFactory(void)
 {
-    d3dSwapChain->SetFullscreenState(FALSE, NULL);
-	d3dSwapChain->Release();
-	d3dContext->Release();
-	d3dDevice->Release();
-	d3dBackBuffer->Release();
-    d3dDepthStencilBuffer->Release();
-    d3dDepthStencilState->Release();
-    d3dDepthStencilView->Release();
-    d3dRasterizerState->Release();
+    if(d3dSwapChain)
+    {
+        d3dSwapChain->SetFullscreenState(FALSE, NULL);
+        d3dSwapChain->Release();
+    }
+	if(d3dContext)
+        d3dContext->Release();
+    if(d3dDevice)
+	    d3dDevice->Release();
+    if(d3dBackBuffer)
+	    d3dBackBuffer->Release();
+    if(d3dDepthStencilBuffer)
+        d3dDepthStencilBuffer->Release();
+    if(d3dDepthStencilState)
+        d3dDepthStencilState->Release();
+    if(d3dDepthStencilView)
+        d3dDepthStencilView->Release();
+    if(d3dRasterizerState)
+        d3dRasterizerState->Release();
 }
 
 void D3DFactory::Initialisation(HWND windowHandlePtr, int width, int height, bool fullScreenVal)
@@ -40,22 +50,25 @@ void D3DFactory::Initialisation(HWND windowHandlePtr, int width, int height, boo
 
 DXGI_RATIONAL D3DFactory::SetupDisplaySettings()
 {
-    unsigned int numModes = 0;
     IDXGIFactory* factory;
+    if(FAILED(CreateDXGIFactory(__uuidof(IDXGIFactory),(void**)&factory)))
+        throw std::exception("SetupDisplaySettings() - FAILED\nCreateDXGIFactory - FAILED");
+
     IDXGIAdapter* adapter;
-    IDXGIOutput* adapterOutput;
-    DXGI_ADAPTER_DESC adapterDesc;
-    DXGI_RATIONAL refreshRate;
-
-    ZeroMemory(&refreshRate, sizeof(DXGI_RATIONAL));
-
-    CreateDXGIFactory(__uuidof(IDXGIFactory),(void**)&factory);
     if(FAILED(factory->EnumAdapters(0,&adapter)))
-		throw std::invalid_argument("");
-    adapter->EnumOutputs(0,&adapterOutput);
+        throw std::exception("SetupDisplaySettings() - FAILED\nEnumAdapters - FAILED");
+
+    IDXGIOutput* adapterOutput;
+    if(FAILED(adapter->EnumOutputs(0,&adapterOutput)))
+        throw std::exception("SetupDisplaySettings() - FAILED\nEnumOutputs - FAILED");
+
+    unsigned int numModes = 0;
     adapterOutput->GetDisplayModeList(DXGI_FORMAT_R8G8B8A8_UNORM, DXGI_ENUM_MODES_INTERLACED, &numModes, NULL);
     auto displayModeList = new DXGI_MODE_DESC[numModes];
     adapterOutput->GetDisplayModeList(DXGI_FORMAT_R8G8B8A8_UNORM, DXGI_ENUM_MODES_INTERLACED, &numModes, displayModeList);
+
+    DXGI_RATIONAL refreshRate;
+    ZeroMemory(&refreshRate, sizeof(DXGI_RATIONAL));
 
     for(int i=0; i<numModes; i++)
 	{
@@ -68,6 +81,7 @@ DXGI_RATIONAL D3DFactory::SetupDisplaySettings()
 		}
 	}
 
+    DXGI_ADAPTER_DESC adapterDesc;
     adapter->GetDesc(&adapterDesc);
     videoMemory = adapterDesc.DedicatedVideoMemory / 1024 / 1024;
     wcstombs(videoAdapterDescription, adapterDesc.Description, 128);
@@ -109,14 +123,16 @@ void D3DFactory::createDevice()
         &d3dSwapChain,
         &d3dDevice, NULL,
         &d3dContext)))
-        throw std::invalid_argument("D3D11CreateDeviceAndSwapChain - FAIL");
+        throw std::exception("createDevice() - FAILED");
 }
 
 void D3DFactory::createBackBuffer()
 {
     ID3D11Texture2D *pBackBuffer = nullptr;
     d3dSwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID*)&pBackBuffer);
-	d3dDevice->CreateRenderTargetView(pBackBuffer, NULL, &d3dBackBuffer);
+	if(FAILED(d3dDevice->CreateRenderTargetView(pBackBuffer, NULL, &d3dBackBuffer)))
+        throw std::exception("createBackBuffer() - FAILED");
+
     pBackBuffer->Release();
 }
 
@@ -135,7 +151,8 @@ void D3DFactory::createDepthBuffer()
 	depthBufferDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
 	depthBufferDesc.CPUAccessFlags = 0;
 	depthBufferDesc.MiscFlags = 0;
-    d3dDevice->CreateTexture2D(&depthBufferDesc, NULL, &d3dDepthStencilBuffer);
+    if(FAILED(d3dDevice->CreateTexture2D(&depthBufferDesc, NULL, &d3dDepthStencilBuffer)))
+        throw std::exception("createDepthBuffer() - FAILED");
 }
 
 void D3DFactory::createDepthStencilState()
@@ -158,7 +175,8 @@ void D3DFactory::createDepthStencilState()
 	depthStencilDesc.BackFace.StencilDepthFailOp = D3D11_STENCIL_OP_DECR;
 	depthStencilDesc.BackFace.StencilPassOp = D3D11_STENCIL_OP_KEEP;
 	depthStencilDesc.BackFace.StencilFunc = D3D11_COMPARISON_ALWAYS;
-    d3dDevice->CreateDepthStencilState(&depthStencilDesc, &d3dDepthStencilState);
+    if(FAILED(d3dDevice->CreateDepthStencilState(&depthStencilDesc, &d3dDepthStencilState)))
+        throw std::exception("createDepthStencilState() - FAILED");
     d3dContext->OMSetDepthStencilState(d3dDepthStencilState, 1);
 }
 
@@ -169,7 +187,8 @@ void D3DFactory::createDepthStencilView()
     depthStencilViewDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
 	depthStencilViewDesc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
 	depthStencilViewDesc.Texture2D.MipSlice = 0;
-    d3dDevice->CreateDepthStencilView(d3dDepthStencilBuffer, &depthStencilViewDesc, &d3dDepthStencilView);
+    if(FAILED(d3dDevice->CreateDepthStencilView(d3dDepthStencilBuffer, &depthStencilViewDesc, &d3dDepthStencilView)))
+        throw std::exception("createBackBuffer() - FAILED");
 }
 
 void D3DFactory::setRenderTarget()
@@ -195,7 +214,8 @@ void D3DFactory::setViewport()
 	rasterDesc.MultisampleEnable = false;
 	rasterDesc.ScissorEnable = false;
 	rasterDesc.SlopeScaledDepthBias = 0.0f;
-    d3dDevice->CreateRasterizerState(&rasterDesc, &d3dRasterizerState);
+    if(FAILED(d3dDevice->CreateRasterizerState(&rasterDesc, &d3dRasterizerState)))
+        throw std::exception("setViewport() - FAILED\nCreateRasterizerState() - FAILED");
 
 	D3D11_VIEWPORT viewport;
     ZeroMemory(&viewport, sizeof(D3D11_VIEWPORT));

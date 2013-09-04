@@ -1,14 +1,20 @@
 #include "Graphics.h"
-#include <stdexcept>
+#include <exception>
 
 Graphics::Graphics(void)
 {
     graphicsWidth = graphicsHeight = 0;
+    ok = true;
 }
 
 
 Graphics::~Graphics(void)
 {
+}
+
+bool Graphics::isOK() const
+{
+    return ok;
 }
 
 void Graphics::setApplicationTitle(const LPCWSTR &title)
@@ -23,12 +29,13 @@ void Graphics::createGraphics3D(int screenWidth, int screenHeight, bool isFullSc
 		setScreenResolution(screenWidth, screenHeight);
 		graphicsWindow.createWindowRect(graphicsWidth, graphicsHeight, isFullScreen);
 		graphicsD3D.Initialisation(graphicsWindow.getWindowHandle(), graphicsWidth, graphicsHeight, isFullScreen);
-        graphicsD3D.InitalisePipeline();
+        graphicsD3D.InitialisePipeline();
         createMatrices();
 	}
-	catch (const std::invalid_argument &e)
+    catch (const std::exception &e)
 	{
-		MessageBox(graphicsWindow.getWindowHandle(), (LPCWSTR)(e.what()), L"sdfs",MB_OK);
+        MessageBoxA(graphicsWindow.getWindowHandle(), e.what(), "ERROR: Graphics wasn't initialisated!", MB_OK | MB_ICONERROR);
+        ok = false;
 	}
 }
 

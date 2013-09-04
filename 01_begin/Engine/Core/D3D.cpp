@@ -32,7 +32,7 @@ IDXGISwapChain* D3D::getSwapChain() const
     return d3dSwapChain;
 }
 
-void D3D::InitalisePipeline()
+void D3D::InitialisePipeline()
 {
     ID3D10Blob* errorMessage = nullptr;
 	ID3D10Blob* vertexShaderBuffer = nullptr;
@@ -41,24 +41,27 @@ void D3D::InitalisePipeline()
     if(FAILED(D3DCompileFromFile(L"Engine/Shaders/VertexShader.hlsl", 0, 0, "main", "vs_5_0", 0, 0, &vertexShaderBuffer, &errorMessage)))
     {
         if(errorMessage)
-            outputShaderErrorMessage(errorMessage, windowHandle, L"VertexShader.hlsl");
+        {
+            generateErrorLog(errorMessage);
+            throw std::exception("Compile Error in VertexShader.hlsl\nSee ERROR_LOG.txt");
+        }
         else
-            MessageBox(windowHandle, L"VertexShader.hlsl", L"Missing Shader File", MB_OK);
-        return;
+            throw std::exception("Missing Shader File: VertexShader.hlsl");
     }
-    else
-        d3dDevice->CreateVertexShader(vertexShaderBuffer->GetBufferPointer(), vertexShaderBuffer->GetBufferSize(), NULL, &vertexShader);
 
     if(FAILED(D3DCompileFromFile(L"Engine/Shaders/PixelShader.hlsl", 0, 0, "main", "ps_5_0", 0, 0, &pixelShaderBuffer, &errorMessage)))
     {
         if(errorMessage)
-            outputShaderErrorMessage(errorMessage, windowHandle, L"PixelShader.hlsl");
+        {
+            generateErrorLog(errorMessage);
+            throw std::exception("Compile Error in PixelShader.hlsl\nSee ERROR_LOG.txt");
+        }
         else
-            MessageBox(windowHandle, L"PixelShader.hlsl", L"Missing Shader File", MB_OK);
-        return;
+            throw std::exception("Missing Shader File: PixelShader.hlsl");
     }
-    else
-        d3dDevice->CreatePixelShader(pixelShaderBuffer->GetBufferPointer(), pixelShaderBuffer->GetBufferSize(), NULL, &pixelShader);
+
+    d3dDevice->CreateVertexShader(vertexShaderBuffer->GetBufferPointer(), vertexShaderBuffer->GetBufferSize(), NULL, &vertexShader);
+    d3dDevice->CreatePixelShader(pixelShaderBuffer->GetBufferPointer(), pixelShaderBuffer->GetBufferSize(), NULL, &pixelShader);
 
     vertexShaderBuffer->Release();
     pixelShaderBuffer->Release();
@@ -67,12 +70,7 @@ void D3D::InitalisePipeline()
     d3dContext->PSSetShader(pixelShader, nullptr, 0);
 }
 
-void D3D::clearShaderFileBuffers()
-{
-
-}
-
-void D3D::outputShaderErrorMessage(ID3D10Blob* errorMessage, HWND hwnd, WCHAR* shaderFilename)
+void D3D::generateErrorLog(ID3D10Blob* errorMessage)
 {
 	char* compileErrors;
 	std::ofstream fout;
@@ -87,22 +85,13 @@ void D3D::outputShaderErrorMessage(ID3D10Blob* errorMessage, HWND hwnd, WCHAR* s
 	fout.open("shader-error.txt");
 
 	// Write out the error message.
-	for(int i=0; i<bufferSize; i++)
-	{
-		fout << compileErrors[i];
-	}
+    fout.write(compileErrors, bufferSize);
 
 	// Close the file.
 	fout.close();
 
 	// Release the error message.
 	errorMessage->Release();
-    errorMessage = nullptr;
-
-	// Pop a message up on the screen to notify the user to check the text file for compile errors.
-	MessageBox(hwnd, L"Error compiling shader.  Check shader-error.txt for message.", shaderFilename, MB_OK);
-
-	return;
 }
 
 void D3D::Draw()

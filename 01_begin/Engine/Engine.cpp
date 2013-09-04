@@ -22,5 +22,5 @@ bool Engine::isRunning()
         if(msg.message == WM_QUIT)
 			return false;
     }
-	return true;
+    return graphics.isOK() & input.isOK();
 }
