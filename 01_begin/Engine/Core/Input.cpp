@@ -38,11 +38,12 @@ bool Input::isMouseHit(unsigned char scanCode)
     /*bool result = mouseHit[scanCode];
     mouseHit[scanCode] = false;
     return result;*/
+    return false;
 }
 
 bool Input::isMouseDown(unsigned char scanCode)
 {
-    //return mouseDown[scanCode];
+    return false;//mouseDown[scanCode];
 }
 
 LRESULT CALLBACK Input::windowProcessor(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)

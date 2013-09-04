@@ -1,6 +1,7 @@
 #include "D3D.h"
 #include <stdexcept>
-#include <fstream>
+#include <string>
+#include <vector>
 
 D3D::D3D(void) : D3DFactory()
 {
@@ -42,8 +43,9 @@ void D3D::InitialisePipeline()
     {
         if(errorMessage)
         {
-            generateErrorLog(errorMessage);
-            throw std::exception("Compile Error in VertexShader.hlsl\nSee ERROR_LOG.txt");
+            auto txt = std::string("Compile Error in VertexShader.hlsl\n");
+            txt.append((char*)errorMessage->GetBufferPointer());
+            throw std::exception(txt.c_str());
         }
         else
             throw std::exception("Missing Shader File: VertexShader.hlsl");
@@ -53,8 +55,9 @@ void D3D::InitialisePipeline()
     {
         if(errorMessage)
         {
-            generateErrorLog(errorMessage);
-            throw std::exception("Compile Error in PixelShader.hlsl\nSee ERROR_LOG.txt");
+            auto txt = std::string("Compile Error in PixelShader.hlsl\n");
+            txt.append((char*)errorMessage->GetBufferPointer());
+            throw std::exception(txt.c_str());
         }
         else
             throw std::exception("Missing Shader File: PixelShader.hlsl");
@@ -70,34 +73,10 @@ void D3D::InitialisePipeline()
     d3dContext->PSSetShader(pixelShader, nullptr, 0);
 }
 
-void D3D::generateErrorLog(ID3D10Blob* errorMessage)
-{
-	char* compileErrors;
-	std::ofstream fout;
-
-	// Get a pointer to the error message text buffer.
-	compileErrors = (char*)(errorMessage->GetBufferPointer());
-
-	// Get the length of the message.
-	auto bufferSize = errorMessage->GetBufferSize();
-
-	// Open a file to write the error message to.
-	fout.open("shader-error.txt");
-
-	// Write out the error message.
-    fout.write(compileErrors, bufferSize);
-
-	// Close the file.
-	fout.close();
-
-	// Release the error message.
-	errorMessage->Release();
-}
-
 void D3D::Draw()
 {
-    float color[4] = {0.0f, 0.2f, 0.4f, 1.0f};
-    d3dContext->ClearRenderTargetView(d3dBackBuffer, color);
+    std::vector<float> color(4, 0.2f);
+    d3dContext->ClearRenderTargetView(d3dBackBuffer, color.data());
     d3dContext->ClearDepthStencilView(d3dDepthStencilView ,D3D11_CLEAR_DEPTH, 1.0f, 0);
 	d3dSwapChain->Present(1, 0);
 }

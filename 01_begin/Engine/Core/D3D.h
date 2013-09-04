@@ -24,7 +24,5 @@ private:
     
     ID3D11VertexShader* vertexShader;
     ID3D11PixelShader* pixelShader;
-
-    void generateErrorLog(ID3D10Blob* errorMessage);
 };
 
