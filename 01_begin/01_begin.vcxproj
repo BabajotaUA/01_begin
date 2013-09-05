@@ -146,6 +146,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="App.cpp" />
+    <ClCompile Include="Engine\Assets\Mesh.cpp" />
     <ClCompile Include="Engine\Core\D3DFactory.cpp" />
     <ClCompile Include="Engine\Engine.cpp" />
     <ClCompile Include="Engine\Core\D3DPipeline.cpp" />
@@ -154,6 +155,7 @@
     <ClCompile Include="Engine\Core\Window.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Engine\Assets\Mesh.h" />
     <ClInclude Include="Engine\Core\D3DFactory.h" />
     <ClInclude Include="Engine\Engine.h" />
     <ClInclude Include="Engine\Core\D3DPipeline.h" />

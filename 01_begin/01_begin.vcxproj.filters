@@ -20,6 +20,9 @@
     <ClCompile Include="Engine\Core\D3DPipeline.cpp">
       <Filter>Engine\Core</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\Assets\Mesh.cpp">
+      <Filter>Engine\Assets</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Engine">
@@ -30,6 +33,9 @@
     </Filter>
     <Filter Include="Engine\Shaders">
       <UniqueIdentifier>{e27e1736-b6a2-4dde-b6aa-fcc871abdd20}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\Assets">
+      <UniqueIdentifier>{5c2410f1-5763-48c5-ad3b-59369457a78f}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -50,6 +56,9 @@
     </ClInclude>
     <ClInclude Include="Engine\Core\D3DPipeline.h">
       <Filter>Engine\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Assets\Mesh.h">
+      <Filter>Engine\Assets</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
