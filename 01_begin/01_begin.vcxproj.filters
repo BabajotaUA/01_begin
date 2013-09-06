@@ -60,6 +60,9 @@
     <ClInclude Include="Engine\Assets\Mesh.h">
       <Filter>Engine\Assets</Filter>
     </ClInclude>
+    <ClInclude Include="Engine\Assets\Entity.h">
+      <Filter>Engine\Assets</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Engine\Shaders\PixelShader.hlsl">

@@ -155,6 +155,7 @@
     <ClCompile Include="Engine\Core\Window.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Engine\Assets\Entity.h" />
     <ClInclude Include="Engine\Assets\Mesh.h" />
     <ClInclude Include="Engine\Core\D3DFactory.h" />
     <ClInclude Include="Engine\Engine.h" />
